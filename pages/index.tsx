@@ -1,11 +1,12 @@
 import type { NextPage } from "next";
-import Navbar from "../components/Navbar";
+import PageWrapper from "../components/PageWrapper";
+import SearchBar from "../components/SearchBar";
 
 const Home: NextPage = () => {
     return (
-        <div className="flex flex-row">
-            <Navbar currPage="/" />
-        </div>
+        <PageWrapper currPage="/">
+            <SearchBar />
+        </PageWrapper>
     );
 };
 
