@@ -8,7 +8,7 @@ const PageWrapper: React.FC<Props> = ({ currPage, children }) => {
     return (
         <div className="flex flex-row">
             <Navbar currPage={currPage} />
-            <div className="p-6">{children}</div>
+            <div className="p-6 w-full">{children}</div>
         </div>
     );
 };

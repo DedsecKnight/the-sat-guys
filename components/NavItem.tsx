@@ -7,7 +7,7 @@ interface Props {
 const NavItem: React.FC<Props> = ({ active, icon, title }) => {
     return (
         <div
-            className={`p-3 flex flex-row gap-x-2 items-center ${
+            className={`p-3 flex flex-row gap-x-2 items-center cursor-pointer ${
                 active && "bg-green-500"
             } rounded-xl`}
         >

@@ -8,7 +8,10 @@ interface Props {
 
 const Navbar: React.FC<Props> = ({ currPage }) => {
     return (
-        <div className="w-64 bg-gray-100 sticky top-0 h-screen p-4 flex flex-col justify-between">
+        <div
+            id="navbar"
+            className="w-1/6 bg-gray-100 sticky top-0 h-screen p-4 flex flex-col justify-between"
+        >
             <Image src={logo} alt="Logo" />
 
             <div>
