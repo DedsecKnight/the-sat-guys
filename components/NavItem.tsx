@@ -1,15 +1,18 @@
+import Link from "next/link";
+
 interface Props {
     active: boolean;
     icon: any;
     title: string;
+    redirect: string;
 }
 
-const NavItem: React.FC<Props> = ({ active, icon, title }) => {
+const NavItem: React.FC<Props> = ({ active, icon, title, redirect }) => {
     return (
         <div
             className={`p-3 flex flex-row gap-x-2 items-center cursor-pointer ${
-                active && "bg-green-500"
-            } rounded-xl`}
+                active ? "bg-green-500" : "hover:bg-green-300"
+            } rounded-xl mb-2`}
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -20,7 +23,11 @@ const NavItem: React.FC<Props> = ({ active, icon, title }) => {
             >
                 {icon}
             </svg>
-            <h1 className={active ? "text-white" : "text-black"}>{title}</h1>
+            <Link href={redirect}>
+                <h1 className={active ? "text-white" : "text-black"}>
+                    {title}
+                </h1>
+            </Link>
         </div>
     );
 };

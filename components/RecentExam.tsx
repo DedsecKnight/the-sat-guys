@@ -1,6 +1,6 @@
 const RecentExam = () => {
     return (
-        <div className="border-2 border-gray-100 rounded-xl p-5 my-5 flex flex-col justify-between">
+        <div className="border-2 border-gray-100 rounded-xl p-7 my-5 flex flex-col justify-between">
             <div className="flex flex-row justify-between">
                 <h1 className="text-lg font-medium">Recent Exam</h1>
                 <h1 className="text-lg">Click to view all recent exams</h1>

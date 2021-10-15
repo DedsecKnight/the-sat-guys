@@ -27,6 +27,7 @@ const Navbar: React.FC<Props> = ({ currPage }) => {
                             />
                         }
                         title="Dashboard"
+                        redirect="/"
                     />
                     <NavItem
                         active={currPage === "/donate"}
@@ -39,6 +40,7 @@ const Navbar: React.FC<Props> = ({ currPage }) => {
                             />
                         }
                         title="Donate Question"
+                        redirect="/donate"
                     />
 
                     <NavItem
@@ -52,6 +54,7 @@ const Navbar: React.FC<Props> = ({ currPage }) => {
                             />
                         }
                         title="Generate Exam"
+                        redirect="/generate"
                     />
 
                     <NavItem
@@ -73,6 +76,7 @@ const Navbar: React.FC<Props> = ({ currPage }) => {
                             </>
                         }
                         title="Settings"
+                        redirect="/settings"
                     />
                 </div>
             </div>
@@ -90,6 +94,7 @@ const Navbar: React.FC<Props> = ({ currPage }) => {
                                 d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                             />
                         }
+                        redirect="/admin/reports"
                         title="View Report"
                     />
                     <NavItem
@@ -102,6 +107,7 @@ const Navbar: React.FC<Props> = ({ currPage }) => {
                                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
                             />
                         }
+                        redirect="/admin/approve"
                         title="Approve Questions"
                     />
                     <NavItem
@@ -114,6 +120,7 @@ const Navbar: React.FC<Props> = ({ currPage }) => {
                                 d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
                             />
                         }
+                        redirect="/admin/bank"
                         title="Question Bank"
                     />
                     <NavItem
@@ -126,6 +133,7 @@ const Navbar: React.FC<Props> = ({ currPage }) => {
                                 d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
                             />
                         }
+                        redirect="/admin/invite"
                         title="Invite Admin"
                     />
                 </div>
@@ -142,6 +150,7 @@ const Navbar: React.FC<Props> = ({ currPage }) => {
                             d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                         />
                     }
+                    redirect=""
                     title="Logout"
                 />
             </div>

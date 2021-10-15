@@ -6,7 +6,7 @@ import SearchBar from "../components/SearchBar";
 
 const Home: NextPage = () => {
     return (
-        <PageWrapper currPage="/">
+        <PageWrapper currPage="/" pageTitle="Dashboard">
             <div className="flex flex-row items-center justify-between">
                 <div className="flex flex-row items-center w-full gap-x-6">
                     <Hamburger />
