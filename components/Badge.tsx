@@ -18,7 +18,7 @@ const GreenBadge = ({ children }: React.PropsWithChildren<unknown>) => {
 
 const YellowBadge = ({ children }: React.PropsWithChildren<unknown>) => {
   return (
-    <div className="flex flex-row justify-between py-2 bg-yellow-300 rounded-xl p-3 my-2">
+    <div className="flex flex-row justify-between py-2 bg-yellow-300 rounded-xl p-3 my-2 items-center">
       {children}
     </div>
   );
