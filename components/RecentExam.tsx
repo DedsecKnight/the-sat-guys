@@ -1,36 +1,24 @@
-const RecentExam = () => {
-    return (
-        <div className="border-2 border-gray-100 rounded-xl p-7 my-5 flex flex-col justify-between">
-            <div className="flex flex-row justify-between">
-                <h1 className="text-lg font-medium">Recent Exam</h1>
-                <h1 className="text-lg">Click to view all recent exams</h1>
-            </div>
-            <table className="table-fixed mt-5">
-                <thead className="border-3 border-bottom border-gray-100">
-                    <tr>
-                        <th>Exam ID</th>
-                        <th>Category</th>
-                        <th>Time Taken</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td className="text-center">x1234sd</td>
-                        <td className="text-center">Math (no calculator)</td>
-                        <td className="text-center">00:30::23</td>
-                        <td className="text-center">90%</td>
-                    </tr>
-                    <tr>
-                        <td className="text-center">x1234sd</td>
-                        <td className="text-center">Math (no calculator)</td>
-                        <td className="text-center">00:30::23</td>
-                        <td className="text-center">90%</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    );
-};
+import RecentTab from "./RecentTab";
+import { mockExam } from "../lib/exams";
+import { Badge } from "./Badge";
 
-export default RecentExam;
+export default function RecentExam() {
+  return (
+    <RecentTab title="Recent Exam">
+      <div className="p-3">
+        {mockExam.map((exam) => (
+          <Badge
+            color={
+              exam.score >= 90 ? "green" : exam.score >= 50 ? "yellow" : "red"
+            }
+          >
+            <h1>{exam.id}</h1>
+            <h1>{exam.category}</h1>
+            <h1>{exam.time}</h1>
+            <h1>{exam.score}%</h1>
+          </Badge>
+        ))}
+      </div>
+    </RecentTab>
+  );
+}
