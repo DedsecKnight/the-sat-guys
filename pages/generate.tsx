@@ -1,11 +1,11 @@
-import PageWrapper from "../components/PageWrapper";
+import { useEffect } from "react";
+import { useNavContext } from "../components/NavContext";
 
-const Generate = () => {
-    return (
-        <PageWrapper currPage="/generate" pageTitle="Generate Exam">
-            <div>This is generator page</div>
-        </PageWrapper>
-    );
-};
+export default function GeneratePage() {
+  const { updateEndpoint } = useNavContext();
+  useEffect(() => {
+    updateEndpoint("/generate", "Generate Exam");
+  });
 
-export default Generate;
+  return <div>This is generator page</div>;
+}

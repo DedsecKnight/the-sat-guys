@@ -1,11 +1,11 @@
-import PageWrapper from "../components/PageWrapper";
+import { useEffect } from "react";
+import { useNavContext } from "../components/NavContext";
 
-const DonatePage = () => {
-    return (
-        <PageWrapper currPage="/donate" pageTitle="Donate Question">
-            <div>This is donate page</div>
-        </PageWrapper>
-    );
-};
+export default function DonatePage() {
+  const { updateEndpoint } = useNavContext();
+  useEffect(() => {
+    updateEndpoint("/donate", "Donate Question");
+  }, []);
 
-export default DonatePage;
+  return <div>This is donate page</div>;
+}
