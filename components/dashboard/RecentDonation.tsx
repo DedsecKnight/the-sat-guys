@@ -5,8 +5,9 @@ import { Badge } from "../utilities/Badge";
 export default function RecentDonation() {
   return (
     <RecentTab title="Recent Donation">
-      {mockDonations.map((donation) => (
+      {mockDonations.map((donation, idx) => (
         <Badge
+          key={idx}
           color={
             donation.status == "Pending Approval"
               ? "yellow"

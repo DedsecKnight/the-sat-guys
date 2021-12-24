@@ -84,6 +84,7 @@ export default function StepOne() {
       <div className="flex flex-col gap-y-4">
         {selectList.map(({ name, defaultValue, defaultOption, options }) => (
           <CustomSelect
+            key={name}
             name={name}
             defaultOption={defaultOption}
             defaultValue={defaultValue}

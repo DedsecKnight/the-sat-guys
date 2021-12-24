@@ -16,7 +16,7 @@ export default function StepTwoFR() {
         placeholder="Enter your answer statement"
       />
       {correctAnswers.map((answer, idx) => (
-        <div>
+        <div key={idx}>
           <input
             type="text"
             value={answer}

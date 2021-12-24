@@ -6,8 +6,9 @@ export default function RecentExam() {
   return (
     <RecentTab title="Recent Exam">
       <div className="p-3">
-        {mockExam.map((exam) => (
+        {mockExam.map((exam, idx) => (
           <Badge
+            key={idx}
             color={
               exam.score >= 90 ? "green" : exam.score >= 50 ? "yellow" : "red"
             }
