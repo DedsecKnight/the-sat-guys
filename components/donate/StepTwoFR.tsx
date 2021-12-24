@@ -48,7 +48,7 @@ export default function StepTwoFR() {
             }}
             className="bg-green-400 p-3 rounded-lg text-white"
           >
-            Add Question
+            Add Answer
           </button>
           <button
             type="button"
