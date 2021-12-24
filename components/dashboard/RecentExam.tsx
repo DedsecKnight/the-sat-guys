@@ -1,6 +1,6 @@
 import RecentTab from "./RecentTab";
-import { mockExam } from "../lib/exams";
-import { Badge } from "./Badge";
+import { mockExam } from "../../lib/exams";
+import { Badge } from "../utilities/Badge";
 
 export default function RecentExam() {
   return (

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useNavContext } from "../components/NavContext";
-import RecentDonation from "../components/RecentDonation";
-import RecentExam from "../components/RecentExam";
+import { useNavContext } from "../components/context-api/NavContext";
+import RecentDonation from "../components/dashboard/RecentDonation";
+import RecentExam from "../components/dashboard/RecentExam";
 
 export default function HomePage() {
   const { updateEndpoint } = useNavContext();

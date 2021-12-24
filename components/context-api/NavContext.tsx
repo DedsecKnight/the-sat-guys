@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import PageWrapper from "./PageWrapper";
+import PageWrapper from "../utilities/PageWrapper";
 
 interface NavContextState {
   updateEndpoint: (newEndpoint: string, newPageTitle: string) => void;

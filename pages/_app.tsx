@@ -1,8 +1,8 @@
 import type { AppProps } from "next/app";
 import "tailwindcss/tailwind.css";
-import Hamburger from "../components/Hamburger";
-import { NavContextProvider } from "../components/NavContext";
-import SearchBar from "../components/SearchBar";
+import Hamburger from "../components/utilities/Hamburger";
+import { NavContextProvider } from "../components/context-api/NavContext";
+import SearchBar from "../components/utilities/SearchBar";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

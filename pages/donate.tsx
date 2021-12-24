@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavContext } from "../components/NavContext";
+import { useNavContext } from "../components/context-api/NavContext";
 import StepOne from "../components/donate/StepOne";
 import StepTwoMC from "../components/donate/StepTwoMC";
 import StepTwoFR from "../components/donate/StepTwoFR";

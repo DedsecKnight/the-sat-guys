@@ -1,4 +1,4 @@
-import logo from "../public/clover-full.jpg";
+import logo from "../../public/clover-full.jpg";
 import Image from "next/image";
 import NavItem from "./NavItem";
 

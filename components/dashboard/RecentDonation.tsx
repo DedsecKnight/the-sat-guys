@@ -1,6 +1,6 @@
 import RecentTab from "./RecentTab";
-import { mockDonations } from "../lib/donations";
-import { Badge } from "./Badge";
+import { mockDonations } from "../../lib/donations";
+import { Badge } from "../utilities/Badge";
 
 export default function RecentDonation() {
   return (

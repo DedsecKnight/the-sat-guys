@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavContext } from "../components/NavContext";
+import { useNavContext } from "../components/context-api/NavContext";
 
 export default function GeneratePage() {
   const { updateEndpoint } = useNavContext();
