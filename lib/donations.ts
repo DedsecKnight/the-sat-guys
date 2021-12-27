@@ -21,3 +21,27 @@ export const mockDonations: Donation[] = [
     status: "Approved",
   },
 ];
+
+export const mockCorrectAnswerSelect = {
+  name: "correctAnswer",
+  defaultValue: "",
+  defaultOption: "Select your question's correct answer",
+  options: [
+    {
+      value: "a",
+      option: "A",
+    },
+    {
+      value: "b",
+      option: "B",
+    },
+    {
+      value: "c",
+      option: "C",
+    },
+    {
+      value: "d",
+      option: "D",
+    },
+  ],
+};
