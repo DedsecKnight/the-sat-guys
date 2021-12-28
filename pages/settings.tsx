@@ -1,11 +1,12 @@
-import PageWrapper from "../components/PageWrapper";
+import { useEffect } from "react";
+import { useNavContext } from "../components/context-api/NavContext";
 
-const Settings = () => {
-    return (
-        <PageWrapper currPage="/settings" pageTitle="Settings">
-            <div>This is settings page</div>
-        </PageWrapper>
-    );
-};
+export default function SettingPage() {
+  const { updateEndpoint } = useNavContext();
 
-export default Settings;
+  useEffect(() => {
+    updateEndpoint("/settings", "Settings");
+  }, []);
+
+  return <div>This is settings page</div>;
+}
