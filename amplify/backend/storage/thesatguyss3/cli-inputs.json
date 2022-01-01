@@ -1,0 +1,12 @@
+{
+  "resourceName": "thesatguyss3",
+  "policyUUID": "47e4b68e",
+  "bucketName": "assetsbucket",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ]
+}

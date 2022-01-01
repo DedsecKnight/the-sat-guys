@@ -1,10 +1,14 @@
 [
   {
-    "groupName": "admin",
+    "groupName": "thesatguysadmin",
     "precedence": 1
   },
   {
-    "groupName": "nonadmin",
+    "groupName": "thesatguysmoderator",
     "precedence": 2
+  },
+  {
+    "groupName": "thesatguysuser",
+    "precedence": 3
   }
 ]

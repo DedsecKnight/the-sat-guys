@@ -1,6 +1,6 @@
 {
   "function": {
-    "AdminQueries913cfd52": {
+    "AdminQueries2aca606a": {
       "service": "Lambda",
       "providerPlugin": "awscloudformation",
       "build": true,
@@ -43,15 +43,13 @@
           "EMAIL"
         ],
         "signupAttributes": [
-          "EMAIL",
-          "NAME",
-          "PREFERRED_USERNAME"
+          "EMAIL"
         ],
         "passwordProtectionSettings": {
           "passwordPolicyMinLength": 8,
           "passwordPolicyCharacters": []
         },
-        "mfaConfiguration": "OPTIONAL",
+        "mfaConfiguration": "OFF",
         "mfaTypes": [
           "SMS"
         ],
@@ -76,7 +74,7 @@
         },
         {
           "category": "function",
-          "resourceName": "AdminQueries913cfd52",
+          "resourceName": "AdminQueries2aca606a",
           "attributes": [
             "Arn",
             "Name"
@@ -86,32 +84,10 @@
     }
   },
   "storage": {
-    "assetstorage": {
+    "thesatguyss3": {
       "service": "S3",
       "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "thesatguysauth",
-          "attributes": [
-            "UserPoolId"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "userPoolGroups",
-          "attributes": [
-            "adminGroupRole"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "userPoolGroups",
-          "attributes": [
-            "nonadminGroupRole"
-          ]
-        }
-      ]
+      "dependsOn": []
     }
   }
 }

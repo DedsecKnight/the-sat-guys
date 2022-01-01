@@ -1,6 +1,6 @@
 export type AmplifyDependentResourcesAttributes = {
     "function": {
-        "AdminQueries913cfd52": {
+        "AdminQueries2aca606a": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
@@ -9,8 +9,9 @@ export type AmplifyDependentResourcesAttributes = {
     },
     "auth": {
         "userPoolGroups": {
-            "adminGroupRole": "string",
-            "nonadminGroupRole": "string"
+            "thesatguysadminGroupRole": "string",
+            "thesatguysmoderatorGroupRole": "string",
+            "thesatguysuserGroupRole": "string"
         },
         "thesatguysauth": {
             "IdentityPoolId": "string",
@@ -19,8 +20,7 @@ export type AmplifyDependentResourcesAttributes = {
             "UserPoolArn": "string",
             "UserPoolName": "string",
             "AppClientIDWeb": "string",
-            "AppClientID": "string",
-            "CreatedSNSRole": "string"
+            "AppClientID": "string"
         }
     },
     "api": {
@@ -31,7 +31,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "storage": {
-        "assetstorage": {
+        "thesatguyss3": {
             "BucketName": "string",
             "Region": "string"
         }

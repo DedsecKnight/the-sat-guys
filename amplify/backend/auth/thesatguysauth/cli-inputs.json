@@ -1,14 +1,14 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "thesatguysauth_identitypool_b2bdda16",
+    "identityPoolName": "thesatguysauth_identitypool_7d98983a",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "thesatc49de4c3",
-    "userPoolName": "admin",
+    "resourceNameTruncated": "thesat7d98983a",
+    "userPoolName": "thesatguyspool",
     "autoVerifiedAttributes": [
       "email"
     ],
-    "mfaConfiguration": "OPTIONAL",
+    "mfaConfiguration": "OFF",
     "mfaTypes": [
       "SMS Text Message"
     ],
@@ -20,9 +20,7 @@
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
     "requiredAttributes": [
-      "email",
-      "name",
-      "preferred_username"
+      "email"
     ],
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
@@ -33,9 +31,9 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "thesatc49de4c3_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "thesat7d98983a_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "c49de4c3",
+    "sharedId": "7d98983a",
     "resourceName": "thesatguysauth",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "manual",
@@ -47,10 +45,11 @@
     "triggers": {},
     "hostedUI": false,
     "userPoolGroupList": [
-      "admin",
-      "nonadmin"
+      "thesatguysadmin",
+      "thesatguysmoderator",
+      "thesatguysuser"
     ],
-    "adminQueryGroup": "admin",
+    "adminQueryGroup": "thesatguysadmin",
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
     "useEnabledMfas": true,

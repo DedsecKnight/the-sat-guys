@@ -38,12 +38,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "AdminQueries913cfd52",
+            "AdminQueries2aca606a",
             {
               "Fn::Join": [
                 "",
                 [
-                  "AdminQueries913cfd52",
+                  "AdminQueries2aca606a",
                   "-",
                   {
                     "Ref": "env"
@@ -58,7 +58,7 @@
             "ENV": {
               "Ref": "env"
             },
-            "GROUP": "admin",
+            "GROUP": "thesatguysadmin",
             "USERPOOL": {
               "Ref": "auththesatguysauthUserPoolId"
             }
@@ -88,12 +88,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "AdminQueries913cfd52LambdaRole",
+            "AdminQueries2aca606aLambdaRole",
             {
               "Fn::Join": [
                 "",
                 [
-                  "AdminQueries913cfd52LambdaRole",
+                  "AdminQueries2aca606aLambdaRole",
                   "-",
                   {
                     "Ref": "env"
