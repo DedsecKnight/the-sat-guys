@@ -1,0 +1,20 @@
+{
+  "resourceName": "assetstorage",
+  "policyUUID": "47899093",
+  "bucketName": "assetsbucket",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [],
+  "triggerFunction": "NONE",
+  "groupAccess": {
+    "admin": [
+      "CREATE_AND_UPDATE",
+      "READ",
+      "DELETE"
+    ],
+    "nonadmin": [
+      "CREATE_AND_UPDATE",
+      "READ"
+    ]
+  }
+}

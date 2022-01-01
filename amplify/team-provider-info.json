@@ -10,6 +10,18 @@
       "StackName": "amplify-thesatguys-dev-232406",
       "StackId": "arn:aws:cloudformation:us-east-2:926771674865:stack/amplify-thesatguys-dev-232406/631113c0-679e-11ec-aec9-020bd46a2022",
       "AmplifyAppId": "dtdydiyfusmr"
+    },
+    "categories": {
+      "auth": {
+        "thesatguysauth": {},
+        "true": {}
+      },
+      "function": {
+        "AdminQueries913cfd52": {
+          "deploymentBucketName": "amplify-thesatguys-dev-232406-deployment",
+          "s3Key": "amplify-builds/AdminQueries913cfd52-6a434950316a35776e65-build.zip"
+        }
+      }
     }
   }
 }

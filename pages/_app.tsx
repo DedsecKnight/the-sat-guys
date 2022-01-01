@@ -3,6 +3,7 @@ import "tailwindcss/tailwind.css";
 import Hamburger from "../components/utilities/Hamburger";
 import { NavContextProvider } from "../components/context-api/NavContext";
 import SearchBar from "../components/utilities/SearchBar";
+import "../lib/aws-config";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
