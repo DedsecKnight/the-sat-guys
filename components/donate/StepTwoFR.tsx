@@ -1,18 +1,92 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { useNavContext } from "../context-api/NavContext";
 import FRColView from "./FRColView";
 import FRRowView from "./FRRowView";
-import InputWithImage from "./InputWithImage";
+import { ExamConfig } from "../../interfaces/ExamConfig";
+import { StepCompleted } from "../../interfaces/StepCompleted";
 
-export default function StepTwoFR() {
-  const [correctAnswers, setCorrectAnswers] = useState<string[]>([""]);
+interface StepTwoFRProps {
+  examConfig: ExamConfig;
+  onNextHandler: () => void;
+  onPrevHandler: () => void;
+  setExamConfig: (value: ExamConfig) => void;
+}
+
+export default function StepTwoFR({
+  examConfig,
+  onNextHandler,
+  onPrevHandler,
+  setExamConfig,
+}: StepTwoFRProps) {
   const { showNavBar } = useNavContext();
 
   const deleteAnswer = (idx: number) => {
-    const newCorrect = [...correctAnswers];
+    const newCorrect = [...examConfig.answers];
     newCorrect.splice(idx, 1);
-    setCorrectAnswers(newCorrect);
+    const newExamConfig: ExamConfig = {
+      ...examConfig,
+      answers: newCorrect,
+    };
+    setExamConfig(newExamConfig);
   };
+
+  const addAnswer = () => {
+    setExamConfig({
+      ...examConfig,
+      answers: [
+        ...examConfig.answers,
+        { answer: "", isCorrect: true, image: null },
+      ],
+    });
+  };
+
+  const updateAnswer = (idx: number, value: string) => {
+    const newAnswers = [...examConfig.answers];
+    newAnswers[idx].answer = value;
+    setExamConfig({
+      ...examConfig,
+      answers: newAnswers,
+    });
+  };
+
+  const resetData = () => {
+    setExamConfig({
+      ...examConfig,
+      question: {
+        question: "",
+        image: null,
+      },
+      answers: [],
+    });
+  };
+
+  const stepCompleted = (): StepCompleted => {
+    const errors: string[] = [];
+    if (examConfig.question.question === "") {
+      errors.push("Question statement must not be empty");
+    }
+
+    if (examConfig.answers.length === 0) {
+      errors.push("There must be at least 1 answer");
+    }
+
+    if (
+      examConfig.answers.filter(({ answer }) => answer.length === 0).length > 0
+    ) {
+      errors.push("Answer statements must not be empty");
+    }
+
+    return {
+      status: errors.length === 0,
+      msg: errors,
+    };
+  };
+
+  useEffect(() => {
+    if (examConfig.answers.length === 0) {
+      addAnswer();
+    }
+  }, []);
 
   return (
     <>
@@ -22,24 +96,39 @@ export default function StepTwoFR() {
       </div>
       {showNavBar ? (
         <FRRowView
-          correctAnswers={correctAnswers}
+          examConfig={examConfig}
+          setExamConfig={(value) => {
+            setExamConfig(value);
+          }}
           deleteAnswer={deleteAnswer}
+          updateAnswer={updateAnswer}
         />
       ) : (
         <FRColView
-          correctAnswers={correctAnswers}
+          examConfig={examConfig}
+          setExamConfig={(value) => {
+            setExamConfig(value);
+          }}
           deleteAnswer={deleteAnswer}
+          updateAnswer={updateAnswer}
         />
       )}
       <div className="flex flex-row justify-between">
-        <button type="button" className="bg-gray-200 p-3 rounded-lg">
+        <button
+          type="button"
+          className="bg-gray-200 p-3 rounded-lg"
+          onClick={() => {
+            resetData();
+            onPrevHandler();
+          }}
+        >
           Previous
         </button>
         <div className="flex flex-row gap-x-2">
           <button
             type="button"
             onClick={() => {
-              setCorrectAnswers((prev) => [...prev, ""]);
+              addAnswer();
             }}
             className="bg-green-400 p-3 rounded-lg text-white"
           >
@@ -48,6 +137,12 @@ export default function StepTwoFR() {
           <button
             type="button"
             className="bg-green-400 p-3 rounded-lg text-white"
+            onClick={() => {
+              // TODO: Implement function to check if step is completed
+              const completed = stepCompleted();
+              if (completed.status) onNextHandler();
+              else console.log(completed.msg);
+            }}
           >
             Next
           </button>
