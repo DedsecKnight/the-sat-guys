@@ -1,27 +1,52 @@
+import { ExamConfig } from "../../interfaces/ExamConfig";
 import InputWithImage from "./InputWithImage";
 
 interface FRRowViewProps {
-  correctAnswers: string[];
+  examConfig: ExamConfig;
+  setExamConfig: (value: ExamConfig) => void;
   deleteAnswer: (idx: number) => void;
+  updateAnswer: (idx: number, value: string) => void;
 }
 
 export default function FRRowView({
-  correctAnswers,
+  examConfig,
+  setExamConfig,
   deleteAnswer,
+  updateAnswer,
 }: FRRowViewProps) {
   return (
     <>
-      <InputWithImage placeholder="Enter your question statement"></InputWithImage>
-      <input
-        type="text"
-        className="p-3 rounded-lg border-2 w-full"
-        placeholder="Enter your answer statement"
+      <InputWithImage
+        placeholder="Enter your question statement"
+        textValue={examConfig.question.question}
+        imageValue={examConfig.question.image}
+        onChangeText={(value) => {
+          setExamConfig({
+            ...examConfig,
+            question: {
+              ...examConfig.question,
+              question: value,
+            },
+          });
+        }}
+        onChangeImage={(value) => {
+          setExamConfig({
+            ...examConfig,
+            question: {
+              ...examConfig.question,
+              image: value,
+            },
+          });
+        }}
       />
-      {correctAnswers.map((answer, idx) => (
+      {examConfig.answers.map(({ answer }, idx) => (
         <div key={idx}>
           <input
             type="text"
             value={answer}
+            onChange={(e) => {
+              updateAnswer(idx, e.target.value as string);
+            }}
             className="p-3 rounded-lg border-2 w-full"
             placeholder="Enter your correct answer"
           />

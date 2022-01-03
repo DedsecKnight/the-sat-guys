@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function ThankYou() {
   return (
     <>
@@ -11,12 +13,14 @@ export default function ThankYou() {
         </h1>
       </div>
       <div className="flex flex-row justify-end">
-        <button
-          type="button"
-          className="rounded-lg bg-green-400 p-3 text-white"
-        >
-          Back To Dashboard
-        </button>
+        <Link href="/">
+          <button
+            type="button"
+            className="rounded-lg bg-green-400 p-3 text-white"
+          >
+            Back To Dashboard
+          </button>
+        </Link>
       </div>
     </>
   );

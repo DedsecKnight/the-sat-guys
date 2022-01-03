@@ -1,21 +1,79 @@
+import { ExamConfig } from "../../interfaces/ExamConfig";
 import { mockCorrectAnswerSelect } from "../../lib/donations";
 import CustomSelect from "./CustomSelect";
 import InputWithImage from "./InputWithImage";
 
-export default function MCRowView() {
-  const { name, defaultValue, defaultOption, options } =
-    mockCorrectAnswerSelect;
+interface MCRowViewProps {
+  examConfig: ExamConfig;
+  setExamConfig: (value: ExamConfig) => void;
+  correctValue: string;
+  setCorrectValue: (value: string) => void;
+}
+
+export default function MCRowView({
+  examConfig,
+  setExamConfig,
+  correctValue,
+  setCorrectValue,
+}: MCRowViewProps) {
+  const { defaultOption, options } = mockCorrectAnswerSelect;
+
   return (
     <>
-      <InputWithImage placeholder="Enter your question statement" />
-      <InputWithImage placeholder="Enter your question's option A" />
-      <InputWithImage placeholder="Enter your question's option B" />
-      <InputWithImage placeholder="Enter your question's option C" />
-      <InputWithImage placeholder="Enter your question's option D" />
+      <InputWithImage
+        placeholder="Enter your question statement"
+        textValue={examConfig.question.question}
+        imageValue={examConfig.question.image}
+        onChangeText={(value) => {
+          setExamConfig({
+            ...examConfig,
+            question: {
+              ...examConfig.question,
+              question: value,
+            },
+          });
+        }}
+        onChangeImage={(value) => {
+          setExamConfig({
+            ...examConfig,
+            question: {
+              ...examConfig.question,
+              image: value,
+            },
+          });
+        }}
+      />
+      {["a", "b", "c", "d"].map((letter, idx) => (
+        <InputWithImage
+          key={letter}
+          placeholder={`Enter your question's option ${letter.toUpperCase()}`}
+          textValue={examConfig.answers[idx].answer}
+          imageValue={examConfig.answers[idx].image}
+          onChangeImage={(value) => {
+            const newAnswers = [...examConfig.answers];
+            newAnswers[idx].image = value;
+            setExamConfig({
+              ...examConfig,
+              answers: newAnswers,
+            });
+          }}
+          onChangeText={(value) => {
+            const newAnswers = [...examConfig.answers];
+            newAnswers[idx].answer = value;
+            setExamConfig({
+              ...examConfig,
+              answers: newAnswers,
+            });
+          }}
+        />
+      ))}
       <CustomSelect
-        name={name}
+        name="correctAnswer"
         defaultOption={defaultOption}
-        defaultValue={defaultValue}
+        value={correctValue}
+        onChangeHandler={(e) => {
+          setCorrectValue(e.target.value);
+        }}
         options={options}
       ></CustomSelect>
     </>
