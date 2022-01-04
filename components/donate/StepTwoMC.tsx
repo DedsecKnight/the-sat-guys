@@ -49,6 +49,10 @@ export default function StepTwoMC({
       errors.push("Question statement must not be empty");
     }
 
+    if (questionConfig.question.image?.type.indexOf("image") === -1) {
+      errors.push("Uploaded file must be an image");
+    }
+
     if (
       questionConfig.answers.filter(
         ({ answer, image }) => answer.length === 0 && image === null
@@ -57,6 +61,14 @@ export default function StepTwoMC({
       errors.push(
         "Answer statement must have either an image or text statement or both"
       );
+    }
+
+    if (
+      questionConfig.answers.filter(
+        ({ image }) => image && image.type.indexOf("image") === -1
+      ).length > 0
+    ) {
+      errors.push("Uploaded file must be an image");
     }
 
     const correctIdx = correctValue.charCodeAt(0) - 97;
@@ -77,10 +89,10 @@ export default function StepTwoMC({
       setQuestionConfig({
         ...questionConfig,
         answers: [
-          { answer: "", isCorrect: false, image: null },
-          { answer: "", isCorrect: false, image: null },
-          { answer: "", isCorrect: false, image: null },
-          { answer: "", isCorrect: false, image: null },
+          { answer: "", isCorrect: false, image: null, isCondition: false },
+          { answer: "", isCorrect: false, image: null, isCondition: false },
+          { answer: "", isCorrect: false, image: null, isCondition: false },
+          { answer: "", isCorrect: false, image: null, isCondition: false },
         ],
       });
     setLoading(false);

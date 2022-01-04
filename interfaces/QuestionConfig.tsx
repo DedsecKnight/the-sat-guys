@@ -11,5 +11,6 @@ export interface QuestionConfig {
     answer: string;
     isCorrect: boolean;
     image: File | null;
+    isCondition: boolean;
   }>;
 }

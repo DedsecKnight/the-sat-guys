@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavContext } from "../context-api/NavContext";
 import FRColView from "./FRColView";
 import FRRowView from "./FRRowView";
@@ -19,6 +19,7 @@ export default function StepTwoFR({
   setQuestionConfig,
 }: StepTwoFRProps) {
   const { showNavBar } = useNavContext();
+  const [isCondition, setIsCondition] = useState(false);
 
   const deleteAnswer = (idx: number) => {
     const newCorrect = [...questionConfig.answers];
@@ -35,7 +36,7 @@ export default function StepTwoFR({
       ...questionConfig,
       answers: [
         ...questionConfig.answers,
-        { answer: "", isCorrect: true, image: null },
+        { answer: "", isCorrect: true, image: null, isCondition },
       ],
     });
   };
@@ -70,11 +71,23 @@ export default function StepTwoFR({
       errors.push("There must be at least 1 answer");
     }
 
+    if (questionConfig.question.image?.type.indexOf("image") === -1) {
+      errors.push("Uploaded file must be an image");
+    }
+
     if (
       questionConfig.answers.filter(({ answer }) => answer.length === 0)
         .length > 0
     ) {
       errors.push("Answer statements must not be empty");
+    }
+
+    if (
+      questionConfig.answers.filter(
+        ({ image }) => image && image.type.indexOf("image") === -1
+      ).length > 0
+    ) {
+      errors.push("Uploaded file must be an image");
     }
 
     return {
@@ -88,6 +101,13 @@ export default function StepTwoFR({
       addAnswer();
     }
   }, []);
+
+  useEffect(() => {
+    setQuestionConfig({
+      ...questionConfig,
+      answers: [{ answer: "", isCorrect: true, image: null, isCondition }],
+    });
+  }, [isCondition]);
 
   return (
     <>
@@ -103,6 +123,10 @@ export default function StepTwoFR({
           }}
           deleteAnswer={deleteAnswer}
           updateAnswer={updateAnswer}
+          isCondition={isCondition}
+          updateIsCondition={(value) => {
+            setIsCondition(value);
+          }}
         />
       ) : (
         <FRColView
@@ -112,6 +136,10 @@ export default function StepTwoFR({
           }}
           deleteAnswer={deleteAnswer}
           updateAnswer={updateAnswer}
+          isCondition={isCondition}
+          updateIsCondition={(value) => {
+            setIsCondition(value);
+          }}
         />
       )}
       <div className="flex flex-row justify-between">

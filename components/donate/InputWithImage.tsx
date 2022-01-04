@@ -3,7 +3,7 @@ import { ChangeEvent } from "react";
 interface InputWithImageProps {
   textValue: string;
   onChangeText: (value: string) => void;
-  imageValue: File;
+  imageValue: File | null;
   onChangeImage: (value: File) => void;
   placeholder: string;
 }
