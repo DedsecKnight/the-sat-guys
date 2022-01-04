@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import CustomFileInput from "./CustomFileInput";
 
 interface InputWithImageProps {
   textValue: string;
@@ -26,10 +26,10 @@ export default function InputWithImage({
         }}
         placeholder={placeholder}
       />
-      <input
-        type="file"
-        onChange={(e) => {
-          if (e.target.files) onChangeImage(e.target.files[0]);
+      <CustomFileInput
+        file={imageValue}
+        updateFile={(value) => {
+          onChangeImage(value);
         }}
       />
     </div>
