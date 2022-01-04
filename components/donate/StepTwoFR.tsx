@@ -2,56 +2,56 @@ import { useEffect } from "react";
 import { useNavContext } from "../context-api/NavContext";
 import FRColView from "./FRColView";
 import FRRowView from "./FRRowView";
-import { ExamConfig } from "../../interfaces/ExamConfig";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import { StepCompleted } from "../../interfaces/StepCompleted";
 
 interface StepTwoFRProps {
-  examConfig: ExamConfig;
+  questionConfig: QuestionConfig;
   onNextHandler: () => void;
   onPrevHandler: () => void;
-  setExamConfig: (value: ExamConfig) => void;
+  setQuestionConfig: (value: QuestionConfig) => void;
 }
 
 export default function StepTwoFR({
-  examConfig,
+  questionConfig,
   onNextHandler,
   onPrevHandler,
-  setExamConfig,
+  setQuestionConfig,
 }: StepTwoFRProps) {
   const { showNavBar } = useNavContext();
 
   const deleteAnswer = (idx: number) => {
-    const newCorrect = [...examConfig.answers];
+    const newCorrect = [...questionConfig.answers];
     newCorrect.splice(idx, 1);
-    const newExamConfig: ExamConfig = {
-      ...examConfig,
+    const newQuestionConfig: QuestionConfig = {
+      ...questionConfig,
       answers: newCorrect,
     };
-    setExamConfig(newExamConfig);
+    setQuestionConfig(newQuestionConfig);
   };
 
   const addAnswer = () => {
-    setExamConfig({
-      ...examConfig,
+    setQuestionConfig({
+      ...questionConfig,
       answers: [
-        ...examConfig.answers,
+        ...questionConfig.answers,
         { answer: "", isCorrect: true, image: null },
       ],
     });
   };
 
   const updateAnswer = (idx: number, value: string) => {
-    const newAnswers = [...examConfig.answers];
+    const newAnswers = [...questionConfig.answers];
     newAnswers[idx].answer = value;
-    setExamConfig({
-      ...examConfig,
+    setQuestionConfig({
+      ...questionConfig,
       answers: newAnswers,
     });
   };
 
   const resetData = () => {
-    setExamConfig({
-      ...examConfig,
+    setQuestionConfig({
+      ...questionConfig,
       question: {
         question: "",
         image: null,
@@ -62,16 +62,17 @@ export default function StepTwoFR({
 
   const stepCompleted = (): StepCompleted => {
     const errors: string[] = [];
-    if (examConfig.question.question === "") {
+    if (questionConfig.question.question === "") {
       errors.push("Question statement must not be empty");
     }
 
-    if (examConfig.answers.length === 0) {
+    if (questionConfig.answers.length === 0) {
       errors.push("There must be at least 1 answer");
     }
 
     if (
-      examConfig.answers.filter(({ answer }) => answer.length === 0).length > 0
+      questionConfig.answers.filter(({ answer }) => answer.length === 0)
+        .length > 0
     ) {
       errors.push("Answer statements must not be empty");
     }
@@ -83,7 +84,7 @@ export default function StepTwoFR({
   };
 
   useEffect(() => {
-    if (examConfig.answers.length === 0) {
+    if (questionConfig.answers.length === 0) {
       addAnswer();
     }
   }, []);
@@ -96,18 +97,18 @@ export default function StepTwoFR({
       </div>
       {showNavBar ? (
         <FRRowView
-          examConfig={examConfig}
-          setExamConfig={(value) => {
-            setExamConfig(value);
+          questionConfig={questionConfig}
+          setQuestionConfig={(value) => {
+            setQuestionConfig(value);
           }}
           deleteAnswer={deleteAnswer}
           updateAnswer={updateAnswer}
         />
       ) : (
         <FRColView
-          examConfig={examConfig}
-          setExamConfig={(value) => {
-            setExamConfig(value);
+          questionConfig={questionConfig}
+          setQuestionConfig={(value) => {
+            setQuestionConfig(value);
           }}
           deleteAnswer={deleteAnswer}
           updateAnswer={updateAnswer}

@@ -1,15 +1,15 @@
-import { ExamConfig } from "../../interfaces/ExamConfig";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import FRView from "./FRView";
 import MCView from "./MCView";
 
 interface StepThreeProps {
-  examConfig: ExamConfig;
+  questionConfig: QuestionConfig;
   onNextHandler: () => void;
   onPrevHandler: () => void;
 }
 
 export default function StepThree({
-  examConfig,
+  questionConfig,
   onNextHandler,
   onPrevHandler,
 }: StepThreeProps) {
@@ -18,10 +18,10 @@ export default function StepThree({
       <div>
         <h1 className="text-xl">Step 3: Confirm your question</h1>
         <h1>Here is what your question will look like on an exam</h1>
-        {examConfig.qtype === "mc" ? (
-          <MCView examConfig={examConfig} />
+        {questionConfig.qtype === "mc" ? (
+          <MCView questionConfig={questionConfig} />
         ) : (
-          <FRView examConfig={examConfig} />
+          <FRView questionConfig={questionConfig} />
         )}
         <div className="flex flex-row justify-between">
           <button

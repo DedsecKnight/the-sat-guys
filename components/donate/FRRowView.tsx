@@ -1,16 +1,16 @@
-import { ExamConfig } from "../../interfaces/ExamConfig";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import InputWithImage from "./InputWithImage";
 
 interface FRRowViewProps {
-  examConfig: ExamConfig;
-  setExamConfig: (value: ExamConfig) => void;
+  questionConfig: QuestionConfig;
+  setQuestionConfig: (value: QuestionConfig) => void;
   deleteAnswer: (idx: number) => void;
   updateAnswer: (idx: number, value: string) => void;
 }
 
 export default function FRRowView({
-  examConfig,
-  setExamConfig,
+  questionConfig,
+  setQuestionConfig,
   deleteAnswer,
   updateAnswer,
 }: FRRowViewProps) {
@@ -18,28 +18,28 @@ export default function FRRowView({
     <>
       <InputWithImage
         placeholder="Enter your question statement"
-        textValue={examConfig.question.question}
-        imageValue={examConfig.question.image}
+        textValue={questionConfig.question.question}
+        imageValue={questionConfig.question.image}
         onChangeText={(value) => {
-          setExamConfig({
-            ...examConfig,
+          setQuestionConfig({
+            ...questionConfig,
             question: {
-              ...examConfig.question,
+              ...questionConfig.question,
               question: value,
             },
           });
         }}
         onChangeImage={(value) => {
-          setExamConfig({
-            ...examConfig,
+          setQuestionConfig({
+            ...questionConfig,
             question: {
-              ...examConfig.question,
+              ...questionConfig.question,
               image: value,
             },
           });
         }}
       />
-      {examConfig.answers.map(({ answer }, idx) => (
+      {questionConfig.answers.map(({ answer }, idx) => (
         <div key={idx}>
           <input
             type="text"

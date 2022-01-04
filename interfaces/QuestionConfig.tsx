@@ -1,4 +1,4 @@
-export interface ExamConfig {
+export interface QuestionConfig {
   topic: string;
   difficulty: string;
   section: string;

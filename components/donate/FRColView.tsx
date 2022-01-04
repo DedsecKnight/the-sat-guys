@@ -1,16 +1,16 @@
-import { ExamConfig } from "../../interfaces/ExamConfig";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import TextAreaWithImage from "./TextAreaWithImage";
 
 interface FRColViewProps {
-  examConfig: ExamConfig;
-  setExamConfig: (value: ExamConfig) => void;
+  questionConfig: QuestionConfig;
+  setQuestionConfig: (value: QuestionConfig) => void;
   deleteAnswer: (idx: number) => void;
   updateAnswer: (idx: number, value: string) => void;
 }
 
 export default function FRColView({
-  examConfig,
-  setExamConfig,
+  questionConfig,
+  setQuestionConfig,
   deleteAnswer,
   updateAnswer,
 }: FRColViewProps) {
@@ -19,22 +19,22 @@ export default function FRColView({
       <div className="w-full px-4">
         <TextAreaWithImage
           placeholder="Enter your question statement"
-          textValue={examConfig.question.question}
-          imageValue={examConfig.question.image}
+          textValue={questionConfig.question.question}
+          imageValue={questionConfig.question.image}
           onChangeText={(value) => {
-            setExamConfig({
-              ...examConfig,
+            setQuestionConfig({
+              ...questionConfig,
               question: {
-                ...examConfig.question,
+                ...questionConfig.question,
                 question: value,
               },
             });
           }}
           onChangeImage={(value) => {
-            setExamConfig({
-              ...examConfig,
+            setQuestionConfig({
+              ...questionConfig,
               question: {
-                ...examConfig.question,
+                ...questionConfig.question,
                 image: value,
               },
             });
@@ -42,7 +42,7 @@ export default function FRColView({
         />
       </div>
       <div className="w-full px-4 flex flex-col gap-y-6">
-        {examConfig.answers.map(({ answer }, idx) => (
+        {questionConfig.answers.map(({ answer }, idx) => (
           <div key={idx}>
             <textarea
               rows={5}

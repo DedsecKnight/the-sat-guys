@@ -1,20 +1,20 @@
 import MCRowView from "./MCRowView";
 import MCColView from "./MCColView";
 import { useNavContext } from "../context-api/NavContext";
-import { ExamConfig } from "../../interfaces/ExamConfig";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import { useEffect, useState } from "react";
 import { StepCompleted } from "../../interfaces/StepCompleted";
 
 interface StepTwoMCProps {
-  examConfig: ExamConfig;
-  setExamConfig: (value: ExamConfig) => void;
+  questionConfig: QuestionConfig;
+  setQuestionConfig: (value: QuestionConfig) => void;
   onNextHandler: () => void;
   onPrevHandler: () => void;
 }
 
 export default function StepTwoMC({
-  examConfig,
-  setExamConfig,
+  questionConfig,
+  setQuestionConfig,
   onNextHandler,
   onPrevHandler,
 }: StepTwoMCProps) {
@@ -23,8 +23,8 @@ export default function StepTwoMC({
   const [loading, setLoading] = useState(true);
 
   const resetData = () => {
-    setExamConfig({
-      ...examConfig,
+    setQuestionConfig({
+      ...questionConfig,
       question: {
         question: "",
         image: null,
@@ -34,10 +34,10 @@ export default function StepTwoMC({
   };
 
   const updateCorrectAnswer = (idx: number) => {
-    const newAnswers = [...examConfig.answers];
+    const newAnswers = [...questionConfig.answers];
     newAnswers[idx].isCorrect = true;
-    setExamConfig({
-      ...examConfig,
+    setQuestionConfig({
+      ...questionConfig,
       answers: newAnswers,
     });
   };
@@ -45,12 +45,12 @@ export default function StepTwoMC({
   const stepCompleted = (): StepCompleted => {
     const errors: string[] = [];
 
-    if (examConfig.question.question.length === 0) {
+    if (questionConfig.question.question.length === 0) {
       errors.push("Question statement must not be empty");
     }
 
     if (
-      examConfig.answers.filter(
+      questionConfig.answers.filter(
         ({ answer, image }) => answer.length === 0 && image === null
       ).length > 0
     ) {
@@ -73,9 +73,9 @@ export default function StepTwoMC({
   };
 
   useEffect(() => {
-    if (examConfig.answers.length === 0)
-      setExamConfig({
-        ...examConfig,
+    if (questionConfig.answers.length === 0)
+      setQuestionConfig({
+        ...questionConfig,
         answers: [
           { answer: "", isCorrect: false, image: null },
           { answer: "", isCorrect: false, image: null },
@@ -96,9 +96,9 @@ export default function StepTwoMC({
       </div>
       {showNavBar ? (
         <MCRowView
-          examConfig={examConfig}
-          setExamConfig={(value) => {
-            setExamConfig(value);
+          questionConfig={questionConfig}
+          setQuestionConfig={(value) => {
+            setQuestionConfig(value);
           }}
           correctValue={correctValue}
           setCorrectValue={(value) => {
@@ -107,9 +107,9 @@ export default function StepTwoMC({
         />
       ) : (
         <MCColView
-          examConfig={examConfig}
-          setExamConfig={(value) => {
-            setExamConfig(value);
+          questionConfig={questionConfig}
+          setQuestionConfig={(value) => {
+            setQuestionConfig(value);
           }}
           correctValue={correctValue}
           setCorrectValue={(value) => {

@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { ExamConfig } from "../../interfaces/ExamConfig";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import { StepCompleted } from "../../interfaces/StepCompleted";
 import CustomSelect, { CustomOptionItemProps } from "./CustomSelect";
 
 interface StepOneProps {
-  examConfig: ExamConfig;
-  setExamConfig: (value: ExamConfig) => void;
+  questionConfig: QuestionConfig;
+  setQuestionConfig: (value: QuestionConfig) => void;
   onNextHandler: () => void;
 }
 
 export default function StepOne({
-  examConfig,
-  setExamConfig,
+  questionConfig,
+  setQuestionConfig,
   onNextHandler,
 }: StepOneProps) {
   const [topicList, setTopicList] = useState<CustomOptionItemProps[]>([]);
@@ -21,23 +21,24 @@ export default function StepOne({
 
   const stepCompleted = (): StepCompleted => {
     const errors: string[] = [];
-    if (examConfig.qtype !== "mc" && examConfig.qtype !== "fr") {
+    if (questionConfig.qtype !== "mc" && questionConfig.qtype !== "fr") {
       errors.push("Invalid question type found");
     }
     if (
-      topicList.filter(({ value }) => value === examConfig.topic).length === 0
+      topicList.filter(({ value }) => value === questionConfig.topic).length ===
+      0
     ) {
       errors.push("Invalid topic found");
     }
     if (
-      sectionList.filter(({ value }) => value === examConfig.section).length ===
-      0
+      sectionList.filter(({ value }) => value === questionConfig.section)
+        .length === 0
     ) {
       errors.push("Invalid section found");
     }
     if (
-      diffList.filter(({ value }) => value === examConfig.difficulty).length ===
-      0
+      diffList.filter(({ value }) => value === questionConfig.difficulty)
+        .length === 0
     ) {
       errors.push("Invalid difficulty found");
     }
@@ -128,10 +129,10 @@ export default function StepOne({
           name="topic"
           defaultOption="Select your question's topic"
           options={topicList}
-          value={examConfig.topic}
+          value={questionConfig.topic}
           onChangeHandler={(e) => {
-            setExamConfig({
-              ...examConfig,
+            setQuestionConfig({
+              ...questionConfig,
               topic: e.target.value,
             });
           }}
@@ -140,10 +141,10 @@ export default function StepOne({
           name="difficulty"
           defaultOption="Select your question's difficulty"
           options={diffList}
-          value={examConfig.difficulty}
+          value={questionConfig.difficulty}
           onChangeHandler={(e) => {
-            setExamConfig({
-              ...examConfig,
+            setQuestionConfig({
+              ...questionConfig,
               difficulty: e.target.value,
             });
           }}
@@ -152,10 +153,10 @@ export default function StepOne({
           name="section"
           defaultOption="Select your question's section"
           options={sectionList}
-          value={examConfig.section}
+          value={questionConfig.section}
           onChangeHandler={(e) => {
-            setExamConfig({
-              ...examConfig,
+            setQuestionConfig({
+              ...questionConfig,
               section: e.target.value,
             });
           }}
@@ -164,10 +165,10 @@ export default function StepOne({
           name="qtype"
           defaultOption="Select your question's question type"
           options={qTypeList}
-          value={examConfig.qtype}
+          value={questionConfig.qtype}
           onChangeHandler={(e) => {
-            setExamConfig({
-              ...examConfig,
+            setQuestionConfig({
+              ...questionConfig,
               qtype: e.target.value,
             });
           }}

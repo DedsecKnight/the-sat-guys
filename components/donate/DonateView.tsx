@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ExamConfig } from "../../interfaces/ExamConfig";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import StepOne from "./StepOne";
 import StepTwoMC from "./StepTwoMC";
 import StepTwoFR from "./StepTwoFR";
@@ -8,7 +8,7 @@ import ThankYou from "./ThankYou";
 
 export default function DonateView() {
   const [pageNumber, setPageNumber] = useState<number>(0);
-  const [examConfig, setExamConfig] = useState<ExamConfig>({
+  const [questionConfig, setQuestionConfig] = useState<QuestionConfig>({
     topic: "",
     section: "",
     difficulty: "",
@@ -28,32 +28,32 @@ export default function DonateView() {
     setPageNumber((prev) => prev - 1);
   };
 
-  const updateExamConfig = (value: ExamConfig) => {
-    setExamConfig(value);
+  const updateQuestionConfig = (value: QuestionConfig) => {
+    setQuestionConfig(value);
   };
 
   if (pageNumber === 0) {
     return (
       <StepOne
-        examConfig={examConfig}
-        setExamConfig={updateExamConfig}
+        questionConfig={questionConfig}
+        setQuestionConfig={updateQuestionConfig}
         onNextHandler={nextPage}
       />
     );
   }
 
   if (pageNumber === 1) {
-    return examConfig.qtype === "mc" ? (
+    return questionConfig.qtype === "mc" ? (
       <StepTwoMC
-        examConfig={examConfig}
-        setExamConfig={updateExamConfig}
+        questionConfig={questionConfig}
+        setQuestionConfig={updateQuestionConfig}
         onNextHandler={nextPage}
         onPrevHandler={prevPage}
       />
     ) : (
       <StepTwoFR
-        examConfig={examConfig}
-        setExamConfig={updateExamConfig}
+        questionConfig={questionConfig}
+        setQuestionConfig={updateQuestionConfig}
         onNextHandler={nextPage}
         onPrevHandler={prevPage}
       />
@@ -63,9 +63,9 @@ export default function DonateView() {
   if (pageNumber === 2) {
     return (
       <StepThree
-        examConfig={examConfig}
+        questionConfig={questionConfig}
         onNextHandler={() => {
-          console.log(examConfig);
+          console.log(questionConfig);
           // TODO: Attempt to donate this question to db
           nextPage();
         }}
