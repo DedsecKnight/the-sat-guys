@@ -5,11 +5,11 @@ export interface QuestionConfig {
   qtype: string;
   question: {
     question: string;
-    image: any;
+    image: File | null;
   };
   answers: Array<{
     answer: string;
     isCorrect: boolean;
-    image: any;
+    image: File | null;
   }>;
 }
