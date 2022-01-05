@@ -19,6 +19,7 @@ export default function DonateView() {
     },
     answers: [],
   });
+  const [isCondition, setIsCondition] = useState(false);
 
   const nextPage = () => {
     setPageNumber((prev) => prev + 1);
@@ -56,6 +57,17 @@ export default function DonateView() {
         setQuestionConfig={updateQuestionConfig}
         onNextHandler={nextPage}
         onPrevHandler={prevPage}
+        isCondition={isCondition}
+        updateIsCondition={(value) => {
+          if (value !== isCondition)
+            setQuestionConfig({
+              ...questionConfig,
+              answers: [
+                { answer: "", isCorrect: true, image: null, isCondition },
+              ],
+            });
+          setIsCondition(value);
+        }}
       />
     );
   }

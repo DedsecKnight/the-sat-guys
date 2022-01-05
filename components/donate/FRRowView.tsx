@@ -61,6 +61,7 @@ export default function FRRowView({
         <div key={idx}>
           {isCondition ? (
             <ConditionComponent
+              answer={answer}
               updateAnswer={(value) => {
                 updateAnswer(idx, value);
               }}

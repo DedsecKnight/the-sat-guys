@@ -10,6 +10,8 @@ interface StepTwoFRProps {
   onNextHandler: () => void;
   onPrevHandler: () => void;
   setQuestionConfig: (value: QuestionConfig) => void;
+  isCondition: boolean;
+  updateIsCondition: (value: boolean) => void;
 }
 
 export default function StepTwoFR({
@@ -17,9 +19,10 @@ export default function StepTwoFR({
   onNextHandler,
   onPrevHandler,
   setQuestionConfig,
+  isCondition,
+  updateIsCondition,
 }: StepTwoFRProps) {
   const { showNavBar } = useNavContext();
-  const [isCondition, setIsCondition] = useState(false);
 
   const deleteAnswer = (idx: number) => {
     const newCorrect = [...questionConfig.answers];
@@ -63,8 +66,11 @@ export default function StepTwoFR({
 
   const stepCompleted = (): StepCompleted => {
     const errors: string[] = [];
-    if (questionConfig.question.question === "") {
-      errors.push("Question statement must not be empty");
+    if (
+      questionConfig.question.question === "" &&
+      questionConfig.question.image === null
+    ) {
+      errors.push("Question must have either a statement or an image");
     }
 
     if (questionConfig.answers.length === 0) {
@@ -76,10 +82,11 @@ export default function StepTwoFR({
     }
 
     if (
-      questionConfig.answers.filter(({ answer }) => answer.length === 0)
-        .length > 0
+      questionConfig.answers.filter(
+        ({ answer, image }) => answer.length === 0 && image === null
+      ).length > 0
     ) {
-      errors.push("Answer statements must not be empty");
+      errors.push("Answer must either be a statement or an image");
     }
 
     if (
@@ -102,13 +109,6 @@ export default function StepTwoFR({
     }
   }, []);
 
-  useEffect(() => {
-    setQuestionConfig({
-      ...questionConfig,
-      answers: [{ answer: "", isCorrect: true, image: null, isCondition }],
-    });
-  }, [isCondition]);
-
   return (
     <>
       <div>
@@ -125,7 +125,7 @@ export default function StepTwoFR({
           updateAnswer={updateAnswer}
           isCondition={isCondition}
           updateIsCondition={(value) => {
-            setIsCondition(value);
+            updateIsCondition(value);
           }}
         />
       ) : (
@@ -138,7 +138,7 @@ export default function StepTwoFR({
           updateAnswer={updateAnswer}
           isCondition={isCondition}
           updateIsCondition={(value) => {
-            setIsCondition(value);
+            updateIsCondition(value);
           }}
         />
       )}

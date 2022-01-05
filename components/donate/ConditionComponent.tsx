@@ -2,14 +2,24 @@ import { useState, useEffect } from "react";
 import CustomSelect from "./CustomSelect";
 
 interface ConditionComponentProps {
+  answer: string;
   updateAnswer: (value: string) => void;
 }
 
 export default function ConditionComponent({
+  answer,
   updateAnswer,
 }: ConditionComponentProps) {
   const [condition, setCondition] = useState("");
   const [value, setValue] = useState("0");
+
+  useEffect(() => {
+    if (answer !== "") {
+      const [currCondition, currValue] = answer.split(" ");
+      setCondition(currCondition);
+      setValue(currValue);
+    }
+  }, []);
 
   useEffect(() => {
     updateAnswer(`${condition} ${value !== "" ? value : "0"}`);
