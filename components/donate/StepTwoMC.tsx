@@ -4,6 +4,7 @@ import { useNavContext } from "../context-api/NavContext";
 import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import { useEffect, useState } from "react";
 import { StepCompleted } from "../../interfaces/StepCompleted";
+import { useNotificationContext } from "../context-api/NotificationContext";
 
 interface StepTwoMCProps {
   questionConfig: QuestionConfig;
@@ -19,6 +20,8 @@ export default function StepTwoMC({
   onPrevHandler,
 }: StepTwoMCProps) {
   const { showNavBar } = useNavContext();
+  const { updateNotificationlist, emptyNotificationList } =
+    useNotificationContext();
   const [correctValue, setCorrectValue] = useState("a");
   const [loading, setLoading] = useState(true);
 
@@ -85,6 +88,7 @@ export default function StepTwoMC({
   };
 
   useEffect(() => {
+    emptyNotificationList();
     if (questionConfig.answers.length === 0)
       setQuestionConfig({
         ...questionConfig,
@@ -147,7 +151,14 @@ export default function StepTwoMC({
             const completed = stepCompleted();
             if (completed.status) {
               onNextHandler();
-            } else console.log(completed.msg);
+              return;
+            }
+            updateNotificationlist(
+              completed.msg.map((message) => ({
+                type: "error",
+                msg: message,
+              }))
+            );
           }}
         >
           Next

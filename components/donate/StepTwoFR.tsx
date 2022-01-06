@@ -4,6 +4,7 @@ import FRColView from "./FRColView";
 import FRRowView from "./FRRowView";
 import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import { StepCompleted } from "../../interfaces/StepCompleted";
+import { useNotificationContext } from "../context-api/NotificationContext";
 
 interface StepTwoFRProps {
   questionConfig: QuestionConfig;
@@ -23,6 +24,8 @@ export default function StepTwoFR({
   updateIsCondition,
 }: StepTwoFRProps) {
   const { showNavBar } = useNavContext();
+  const { updateNotificationlist, emptyNotificationList } =
+    useNotificationContext();
 
   const deleteAnswer = (idx: number) => {
     const newCorrect = [...questionConfig.answers];
@@ -104,6 +107,7 @@ export default function StepTwoFR({
   };
 
   useEffect(() => {
+    emptyNotificationList();
     if (questionConfig.answers.length === 0) {
       addAnswer();
     }
@@ -167,10 +171,17 @@ export default function StepTwoFR({
             type="button"
             className="bg-green-400 p-3 rounded-lg text-white"
             onClick={() => {
-              // TODO: Implement function to check if step is completed
               const completed = stepCompleted();
-              if (completed.status) onNextHandler();
-              else console.log(completed.msg);
+              if (completed.status) {
+                onNextHandler();
+                return;
+              }
+              updateNotificationlist(
+                completed.msg.map((message) => ({
+                  type: "error",
+                  msg: message,
+                }))
+              );
             }}
           >
             Next

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { useEffect } from "react";
+import { useNotificationContext } from "../context-api/NotificationContext";
 
 interface ThankYouProps {
   onDonateAnother: () => void;

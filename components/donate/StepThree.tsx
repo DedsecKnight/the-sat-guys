@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { QuestionConfig } from "../../interfaces/QuestionConfig";
+import { useNotificationContext } from "../context-api/NotificationContext";
 import FRView from "./FRView";
 import MCView from "./MCView";
 
@@ -13,6 +15,10 @@ export default function StepThree({
   onNextHandler,
   onPrevHandler,
 }: StepThreeProps) {
+  const { emptyNotificationList } = useNotificationContext();
+  useEffect(() => {
+    emptyNotificationList();
+  }, []);
   return (
     <>
       <div>

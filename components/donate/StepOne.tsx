@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import { StepCompleted } from "../../interfaces/StepCompleted";
+import { useNotificationContext } from "../context-api/NotificationContext";
 import CustomSelect, { CustomOptionItemProps } from "./CustomSelect";
 
 interface StepOneProps {
@@ -14,6 +15,8 @@ export default function StepOne({
   setQuestionConfig,
   onNextHandler,
 }: StepOneProps) {
+  const { updateNotificationlist, emptyNotificationList } =
+    useNotificationContext();
   const [topicList, setTopicList] = useState<CustomOptionItemProps[]>([]);
   const [diffList, setDiffList] = useState<CustomOptionItemProps[]>([]);
   const [sectionList, setSectionList] = useState<CustomOptionItemProps[]>([]);
@@ -113,6 +116,7 @@ export default function StepOne({
   };
 
   useEffect(() => {
+    emptyNotificationList();
     setTopicList(fetchTopicList());
     setDiffList(fetchDiffList());
     setSectionList(fetchSectionList());
@@ -180,8 +184,16 @@ export default function StepOne({
           className="rounded-lg bg-green-400 p-3 text-white"
           onClick={() => {
             const completed = stepCompleted();
-            if (completed.status) onNextHandler();
-            else console.log(completed.msg);
+            if (completed.status) {
+              onNextHandler();
+              return;
+            }
+            updateNotificationlist(
+              completed.msg.map((message) => ({
+                type: "error",
+                msg: message,
+              }))
+            );
           }}
         >
           Next
