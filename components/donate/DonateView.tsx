@@ -63,7 +63,12 @@ export default function DonateView() {
             setQuestionConfig({
               ...questionConfig,
               answers: [
-                { answer: "", isCorrect: true, image: null, isCondition },
+                {
+                  answer: "",
+                  isCorrect: true,
+                  image: null,
+                  isCondition: value,
+                },
               ],
             });
           setIsCondition(value);
