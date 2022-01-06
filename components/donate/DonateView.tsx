@@ -5,12 +5,8 @@ import StepTwoMC from "./StepTwoMC";
 import StepTwoFR from "./StepTwoFR";
 import StepThree from "./StepThree";
 import ThankYou from "./ThankYou";
-import { RequestHelper } from "../../lib/request-helper";
-import { API_URL } from "../../lib/constants";
-import { useNotificationContext } from "../context-api/NotificationContext";
 
 export default function DonateView() {
-  const { updateNotificationlist } = useNotificationContext();
   const [pageNumber, setPageNumber] = useState<number>(0);
   const [questionConfig, setQuestionConfig] = useState<QuestionConfig>({
     topic: "",
@@ -50,23 +46,6 @@ export default function DonateView() {
       answers: [],
     });
     setPageNumber(0);
-  };
-
-  const submitQuestion = async () => {
-    return RequestHelper.post<
-      {
-        action: string;
-        questionConfig: QuestionConfig;
-      },
-      string
-    >(
-      `${API_URL}/donate`,
-      { "Content-Type": "application/json" },
-      {
-        action: "donate",
-        questionConfig,
-      }
-    );
   };
 
   if (pageNumber === 0) {
@@ -117,15 +96,7 @@ export default function DonateView() {
     return (
       <StepThree
         questionConfig={questionConfig}
-        onNextHandler={async () => {
-          const { status, data } = await submitQuestion();
-          if (status) {
-            updateNotificationlist([{ type: "success", msg: data }]);
-            nextPage();
-          } else {
-            console.log(data);
-          }
-        }}
+        onNextHandler={nextPage}
         onPrevHandler={prevPage}
       />
     );

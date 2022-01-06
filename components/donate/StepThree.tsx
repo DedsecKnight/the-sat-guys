@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { QuestionConfig } from "../../interfaces/QuestionConfig";
+import { API_URL } from "../../lib/constants";
+import { RequestHelper } from "../../lib/request-helper";
 import { useNotificationContext } from "../context-api/NotificationContext";
 import FRView from "./FRView";
 import MCView from "./MCView";
@@ -15,10 +17,30 @@ export default function StepThree({
   onNextHandler,
   onPrevHandler,
 }: StepThreeProps) {
-  const { emptyNotificationList } = useNotificationContext();
+  const { updateNotificationlist, emptyNotificationList } =
+    useNotificationContext();
+
   useEffect(() => {
     emptyNotificationList();
   }, []);
+
+  const submitQuestion = async () => {
+    return RequestHelper.post<
+      {
+        action: string;
+        questionConfig: QuestionConfig;
+      },
+      string
+    >(
+      `${API_URL}/donate`,
+      { "Content-Type": "application/json" },
+      {
+        action: "donate",
+        questionConfig,
+      }
+    );
+  };
+
   return (
     <>
       <div>
@@ -42,8 +64,14 @@ export default function StepThree({
           <button
             type="button"
             className="bg-green-400 p-3 rounded-lg text-white"
-            onClick={() => {
-              onNextHandler();
+            onClick={async () => {
+              const { status, data } = await submitQuestion();
+              updateNotificationlist([
+                { type: status ? "success" : "error", msg: data },
+              ]);
+              if (status) {
+                onNextHandler();
+              }
             }}
           >
             Submit
