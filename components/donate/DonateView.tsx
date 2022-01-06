@@ -35,6 +35,21 @@ export default function DonateView() {
     setQuestionConfig(value);
   };
 
+  const onDonateAnotherHandler = () => {
+    setQuestionConfig({
+      topic: "",
+      section: "",
+      difficulty: "",
+      qtype: "",
+      question: {
+        question: "",
+        image: null,
+      },
+      answers: [],
+    });
+    setPageNumber(0);
+  };
+
   const submitQuestion = async () => {
     return RequestHelper.post<
       {
@@ -114,7 +129,7 @@ export default function DonateView() {
   }
 
   if (pageNumber === 3) {
-    return <ThankYou />;
+    return <ThankYou onDonateAnother={onDonateAnotherHandler} />;
   }
 
   return <div></div>;
