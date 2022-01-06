@@ -5,6 +5,8 @@ import StepTwoMC from "./StepTwoMC";
 import StepTwoFR from "./StepTwoFR";
 import StepThree from "./StepThree";
 import ThankYou from "./ThankYou";
+import { RequestHelper } from "../../lib/request-helper";
+import { API_URL } from "../../lib/constants";
 
 export default function DonateView() {
   const [pageNumber, setPageNumber] = useState<number>(0);
@@ -31,6 +33,23 @@ export default function DonateView() {
 
   const updateQuestionConfig = (value: QuestionConfig) => {
     setQuestionConfig(value);
+  };
+
+  const submitQuestion = async () => {
+    return RequestHelper.post<
+      {
+        action: string;
+        questionConfig: QuestionConfig;
+      },
+      string
+    >(
+      `${API_URL}/donate`,
+      { "Content-Type": "application/json" },
+      {
+        action: "donate",
+        questionConfig,
+      }
+    );
   };
 
   if (pageNumber === 0) {
@@ -82,20 +101,7 @@ export default function DonateView() {
       <StepThree
         questionConfig={questionConfig}
         onNextHandler={async () => {
-          const tmp = await fetch(
-            "https://c586omev5e.execute-api.us-east-2.amazonaws.com/thesatguys/donate",
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-              method: "POST",
-              body: JSON.stringify({
-                action: "donate",
-                questionConfig,
-              }),
-            }
-          );
-          const { status, data } = await tmp.json();
+          const { status, data } = await submitQuestion();
           if (status) {
             nextPage();
           } else {
