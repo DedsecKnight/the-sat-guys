@@ -76,10 +76,25 @@ export default function DonateView() {
     return (
       <StepThree
         questionConfig={questionConfig}
-        onNextHandler={() => {
+        onNextHandler={async () => {
           console.log(questionConfig);
-          // TODO: Attempt to donate this question to db
-          nextPage();
+          const tmp = await fetch('https://c586omev5e.execute-api.us-east-2.amazonaws.com/thesatguys/donate', {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+              action: "donate",
+              questionConfig: questionConfig
+            }),
+          });
+          const {status, data} = await tmp.json();
+          console.log({status, data});
+          if (status) {
+            nextPage();
+          } else {
+            console.log(data);
+          }
         }}
         onPrevHandler={prevPage}
       />
