@@ -40,7 +40,7 @@ export default function StepThree({
               onNextHandler();
             }}
           >
-            Next
+            Submit
           </button>
         </div>
       </div>
