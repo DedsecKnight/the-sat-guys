@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavContext } from "../context-api/NavContext";
 import FRColView from "./FRColView";
 import FRRowView from "./FRRowView";

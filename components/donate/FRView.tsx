@@ -1,5 +1,4 @@
 import { QuestionConfig } from "../../interfaces/QuestionConfig";
-import Image from "next/image";
 import PreviewEntry from "./PreviewEntry";
 
 interface FRViewProps {
