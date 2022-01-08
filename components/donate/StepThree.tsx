@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { QuestionConfig } from "../../interfaces/QuestionConfig";
-import { API_URL } from "../../lib/constants";
 import { RequestHelper } from "../../lib/request-helper";
 import { useLoadingContext } from "../context-api/LoadingContext";
 import { useNotificationContext } from "../context-api/NotificationContext";
@@ -34,7 +33,7 @@ export default function StepThree({
       },
       string
     >(
-      `${API_URL}/donate`,
+      "/api/donate",
       { "Content-Type": "application/json" },
       {
         action: "donate",
