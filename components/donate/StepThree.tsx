@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import { API_URL } from "../../lib/constants";
 import { RequestHelper } from "../../lib/request-helper";
+import { useLoadingContext } from "../context-api/LoadingContext";
 import { useNotificationContext } from "../context-api/NotificationContext";
 import FRView from "./FRView";
 import MCView from "./MCView";
@@ -17,6 +18,7 @@ export default function StepThree({
   onNextHandler,
   onPrevHandler,
 }: StepThreeProps) {
+  const { toggleLoading } = useLoadingContext();
   const { updateNotificationlist, emptyNotificationList } =
     useNotificationContext();
 
@@ -65,12 +67,24 @@ export default function StepThree({
             type="button"
             className="bg-green-400 p-3 rounded-lg text-white"
             onClick={async () => {
-              const { status, data } = await submitQuestion();
-              updateNotificationlist([
-                { type: status ? "success" : "error", msg: data },
-              ]);
-              if (status) {
-                onNextHandler();
+              toggleLoading();
+              try {
+                const { status, data } = await submitQuestion();
+                updateNotificationlist([
+                  { type: status ? "success" : "error", msg: data },
+                ]);
+                toggleLoading();
+                if (status) {
+                  onNextHandler();
+                }
+              } catch (error) {
+                updateNotificationlist([
+                  {
+                    type: "error",
+                    msg: "Unexpected error occurred, please try again later!",
+                  },
+                ]);
+                toggleLoading();
               }
             }}
           >
