@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import StepOne from "./StepOne";
 import StepTwoMC from "./StepTwoMC";
@@ -6,7 +6,14 @@ import StepTwoFR from "./StepTwoFR";
 import StepThree from "./StepThree";
 import ThankYou from "./ThankYou";
 
-export default function DonateView() {
+interface DonateViewProps {
+  topicList: Array<{
+    subtopic: string;
+    section: string;
+  }>;
+}
+
+export default function DonateView({ topicList }: DonateViewProps) {
   const [pageNumber, setPageNumber] = useState<number>(0);
   const [questionConfig, setQuestionConfig] = useState<QuestionConfig>({
     topic: "",
@@ -20,6 +27,15 @@ export default function DonateView() {
     answers: [],
   });
   const [isCondition, setIsCondition] = useState(false);
+  const [filteredTopicList, setFilteredTopicList] = useState<typeof topicList>(
+    []
+  );
+
+  useEffect(() => {
+    setFilteredTopicList(
+      topicList.filter(({ section }) => section === questionConfig.section)
+    );
+  }, [questionConfig.section]);
 
   const nextPage = () => {
     setPageNumber((prev) => prev + 1);
@@ -51,6 +67,7 @@ export default function DonateView() {
   if (pageNumber === 0) {
     return (
       <StepOne
+        topics={filteredTopicList}
         questionConfig={questionConfig}
         setQuestionConfig={updateQuestionConfig}
         onNextHandler={nextPage}

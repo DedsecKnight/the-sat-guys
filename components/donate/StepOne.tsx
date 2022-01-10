@@ -5,6 +5,10 @@ import { useNotificationContext } from "../context-api/NotificationContext";
 import CustomSelect, { CustomOptionItemProps } from "./CustomSelect";
 
 interface StepOneProps {
+  topics: Array<{
+    subtopic: string;
+    section: string;
+  }>;
   questionConfig: QuestionConfig;
   setQuestionConfig: (value: QuestionConfig) => void;
   onNextHandler: () => void;
@@ -14,6 +18,7 @@ export default function StepOne({
   questionConfig,
   setQuestionConfig,
   onNextHandler,
+  topics,
 }: StepOneProps) {
   const { updateNotificationlist, emptyNotificationList } =
     useNotificationContext();
@@ -51,25 +56,23 @@ export default function StepOne({
     };
   };
 
-  const fetchTopicList = () => {
-    return [
-      {
-        value: "probability",
-        option: "Probability",
-      },
-      {
-        value: "algebra",
-        option: "Algebra",
-      },
-      {
-        value: "geometry",
-        option: "Geometry",
-      },
-    ];
-  };
+  useEffect(() => {
+    emptyNotificationList();
+  }, []);
 
-  const fetchDiffList = () => {
-    return [
+  useEffect(() => {
+    setTopicList(
+      topics
+        .filter(({ section }) => section === questionConfig.section)
+        .map(({ subtopic }) => ({
+          value: subtopic,
+          option: subtopic,
+        }))
+    );
+  }, [topics]);
+
+  useEffect(() => {
+    setDiffList([
       {
         value: "easy",
         option: "Easy",
@@ -82,11 +85,8 @@ export default function StepOne({
         value: "hard",
         option: "Hard",
       },
-    ];
-  };
-
-  const fetchSectionList = () => {
-    return [
+    ]);
+    setSectionList([
       {
         value: "reading",
         option: "Reading",
@@ -96,14 +96,15 @@ export default function StepOne({
         option: "Writing",
       },
       {
-        value: "math",
-        option: "Math",
+        value: "cal",
+        option: "Math (Calculator)",
       },
-    ];
-  };
-
-  const fetchQTypeList = () => {
-    return [
+      {
+        value: "no_cal",
+        option: "Math (No Calculator)",
+      },
+    ]);
+    setQTypeList([
       {
         value: "mc",
         option: "Multiple Choice",
@@ -112,15 +113,7 @@ export default function StepOne({
         value: "fr",
         option: "Free Response",
       },
-    ];
-  };
-
-  useEffect(() => {
-    emptyNotificationList();
-    setTopicList(fetchTopicList());
-    setDiffList(fetchDiffList());
-    setSectionList(fetchSectionList());
-    setQTypeList(fetchQTypeList());
+    ]);
   }, []);
 
   return (
@@ -129,6 +122,19 @@ export default function StepOne({
         Step 1: Let's get started with some basic information
       </h1>
       <div className="flex flex-col gap-y-4">
+        <CustomSelect
+          name="section"
+          defaultOption="Select your question's section"
+          options={sectionList}
+          value={questionConfig.section}
+          onChangeHandler={(e) => {
+            setQuestionConfig({
+              ...questionConfig,
+              section: e.target.value,
+              topic: "",
+            });
+          }}
+        />
         <CustomSelect
           name="topic"
           defaultOption="Select your question's topic"
@@ -153,18 +159,7 @@ export default function StepOne({
             });
           }}
         />
-        <CustomSelect
-          name="section"
-          defaultOption="Select your question's section"
-          options={sectionList}
-          value={questionConfig.section}
-          onChangeHandler={(e) => {
-            setQuestionConfig({
-              ...questionConfig,
-              section: e.target.value,
-            });
-          }}
-        />
+
         <CustomSelect
           name="qtype"
           defaultOption="Select your question's question type"
