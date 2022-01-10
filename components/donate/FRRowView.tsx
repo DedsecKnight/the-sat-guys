@@ -1,55 +1,82 @@
-import { ExamConfig } from "../../interfaces/ExamConfig";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
+import ConditionComponent from "./ConditionComponent";
+import CustomSelect from "./CustomSelect";
 import InputWithImage from "./InputWithImage";
 
 interface FRRowViewProps {
-  examConfig: ExamConfig;
-  setExamConfig: (value: ExamConfig) => void;
+  questionConfig: QuestionConfig;
+  setQuestionConfig: (value: QuestionConfig) => void;
   deleteAnswer: (idx: number) => void;
   updateAnswer: (idx: number, value: string) => void;
+  isCondition: boolean;
+  updateIsCondition: (value: boolean) => void;
 }
 
 export default function FRRowView({
-  examConfig,
-  setExamConfig,
+  questionConfig,
+  setQuestionConfig,
   deleteAnswer,
   updateAnswer,
+  isCondition,
+  updateIsCondition,
 }: FRRowViewProps) {
   return (
     <>
       <InputWithImage
         placeholder="Enter your question statement"
-        textValue={examConfig.question.question}
-        imageValue={examConfig.question.image}
+        textValue={questionConfig.question.question}
+        imageValue={questionConfig.question.image}
         onChangeText={(value) => {
-          setExamConfig({
-            ...examConfig,
+          setQuestionConfig({
+            ...questionConfig,
             question: {
-              ...examConfig.question,
+              ...questionConfig.question,
               question: value,
             },
           });
         }}
         onChangeImage={(value) => {
-          setExamConfig({
-            ...examConfig,
+          setQuestionConfig({
+            ...questionConfig,
             question: {
-              ...examConfig.question,
+              ...questionConfig.question,
               image: value,
             },
           });
         }}
       />
-      {examConfig.answers.map(({ answer }, idx) => (
+      <CustomSelect
+        name="isCondition"
+        value={isCondition ? "condition" : "value"}
+        defaultOption="Select your answer type"
+        options={[
+          { option: "Value", value: "value" },
+          { option: "Condition", value: "condition" },
+        ]}
+        onChangeHandler={(e) => {
+          updateIsCondition(e.target.value === "condition");
+        }}
+      />
+      {questionConfig.answers.map(({ answer }, idx) => (
         <div key={idx}>
-          <input
-            type="text"
-            value={answer}
-            onChange={(e) => {
-              updateAnswer(idx, e.target.value as string);
-            }}
-            className="p-3 rounded-lg border-2 w-full"
-            placeholder="Enter your correct answer"
-          />
+          {isCondition ? (
+            <ConditionComponent
+              answer={answer}
+              updateAnswer={(value) => {
+                updateAnswer(idx, value);
+              }}
+            />
+          ) : (
+            <input
+              type="text"
+              value={answer}
+              onChange={(e) => {
+                updateAnswer(idx, e.target.value as string);
+              }}
+              className="p-3 rounded-lg border-2 w-full"
+              placeholder="Enter your correct answer"
+            />
+          )}
           <button
             type="button"
             className="my-2 bg-red-500 py-1 px-2 rounded-lg text-white"

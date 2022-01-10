@@ -1,30 +1,33 @@
 import MCRowView from "./MCRowView";
 import MCColView from "./MCColView";
 import { useNavContext } from "../context-api/NavContext";
-import { ExamConfig } from "../../interfaces/ExamConfig";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import { useEffect, useState } from "react";
 import { StepCompleted } from "../../interfaces/StepCompleted";
+import { useNotificationContext } from "../context-api/NotificationContext";
 
 interface StepTwoMCProps {
-  examConfig: ExamConfig;
-  setExamConfig: (value: ExamConfig) => void;
+  questionConfig: QuestionConfig;
+  setQuestionConfig: (value: QuestionConfig) => void;
   onNextHandler: () => void;
   onPrevHandler: () => void;
 }
 
 export default function StepTwoMC({
-  examConfig,
-  setExamConfig,
+  questionConfig,
+  setQuestionConfig,
   onNextHandler,
   onPrevHandler,
 }: StepTwoMCProps) {
   const { showNavBar } = useNavContext();
+  const { updateNotificationlist, emptyNotificationList } =
+    useNotificationContext();
   const [correctValue, setCorrectValue] = useState("a");
   const [loading, setLoading] = useState(true);
 
   const resetData = () => {
-    setExamConfig({
-      ...examConfig,
+    setQuestionConfig({
+      ...questionConfig,
       question: {
         question: "",
         image: null,
@@ -34,10 +37,10 @@ export default function StepTwoMC({
   };
 
   const updateCorrectAnswer = (idx: number) => {
-    const newAnswers = [...examConfig.answers];
+    const newAnswers = [...questionConfig.answers];
     newAnswers[idx].isCorrect = true;
-    setExamConfig({
-      ...examConfig,
+    setQuestionConfig({
+      ...questionConfig,
       answers: newAnswers,
     });
   };
@@ -45,18 +48,30 @@ export default function StepTwoMC({
   const stepCompleted = (): StepCompleted => {
     const errors: string[] = [];
 
-    if (examConfig.question.question.length === 0) {
+    if (questionConfig.question.question.length === 0) {
       errors.push("Question statement must not be empty");
     }
 
+    if (questionConfig.question.image?.type.indexOf("image") === -1) {
+      errors.push("Uploaded file must be an image");
+    }
+
     if (
-      examConfig.answers.filter(
+      questionConfig.answers.filter(
         ({ answer, image }) => answer.length === 0 && image === null
       ).length > 0
     ) {
       errors.push(
         "Answer statement must have either an image or text statement or both"
       );
+    }
+
+    if (
+      questionConfig.answers.filter(
+        ({ image }) => image && image.type.indexOf("image") === -1
+      ).length > 0
+    ) {
+      errors.push("Uploaded file must be an image");
     }
 
     const correctIdx = correctValue.charCodeAt(0) - 97;
@@ -73,14 +88,15 @@ export default function StepTwoMC({
   };
 
   useEffect(() => {
-    if (examConfig.answers.length === 0)
-      setExamConfig({
-        ...examConfig,
+    emptyNotificationList();
+    if (questionConfig.answers.length === 0)
+      setQuestionConfig({
+        ...questionConfig,
         answers: [
-          { answer: "", isCorrect: false, image: null },
-          { answer: "", isCorrect: false, image: null },
-          { answer: "", isCorrect: false, image: null },
-          { answer: "", isCorrect: false, image: null },
+          { answer: "", isCorrect: false, image: null, isCondition: false },
+          { answer: "", isCorrect: false, image: null, isCondition: false },
+          { answer: "", isCorrect: false, image: null, isCondition: false },
+          { answer: "", isCorrect: false, image: null, isCondition: false },
         ],
       });
     setLoading(false);
@@ -96,9 +112,9 @@ export default function StepTwoMC({
       </div>
       {showNavBar ? (
         <MCRowView
-          examConfig={examConfig}
-          setExamConfig={(value) => {
-            setExamConfig(value);
+          questionConfig={questionConfig}
+          setQuestionConfig={(value) => {
+            setQuestionConfig(value);
           }}
           correctValue={correctValue}
           setCorrectValue={(value) => {
@@ -107,9 +123,9 @@ export default function StepTwoMC({
         />
       ) : (
         <MCColView
-          examConfig={examConfig}
-          setExamConfig={(value) => {
-            setExamConfig(value);
+          questionConfig={questionConfig}
+          setQuestionConfig={(value) => {
+            setQuestionConfig(value);
           }}
           correctValue={correctValue}
           setCorrectValue={(value) => {
@@ -135,7 +151,14 @@ export default function StepTwoMC({
             const completed = stepCompleted();
             if (completed.status) {
               onNextHandler();
-            } else console.log(completed.msg);
+              return;
+            }
+            updateNotificationlist(
+              completed.msg.map((message) => ({
+                type: "error",
+                msg: message,
+              }))
+            );
           }}
         >
           Next

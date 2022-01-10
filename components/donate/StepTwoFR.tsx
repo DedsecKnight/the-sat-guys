@@ -2,56 +2,63 @@ import { useEffect } from "react";
 import { useNavContext } from "../context-api/NavContext";
 import FRColView from "./FRColView";
 import FRRowView from "./FRRowView";
-import { ExamConfig } from "../../interfaces/ExamConfig";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import { StepCompleted } from "../../interfaces/StepCompleted";
+import { useNotificationContext } from "../context-api/NotificationContext";
 
 interface StepTwoFRProps {
-  examConfig: ExamConfig;
+  questionConfig: QuestionConfig;
   onNextHandler: () => void;
   onPrevHandler: () => void;
-  setExamConfig: (value: ExamConfig) => void;
+  setQuestionConfig: (value: QuestionConfig) => void;
+  isCondition: boolean;
+  updateIsCondition: (value: boolean) => void;
 }
 
 export default function StepTwoFR({
-  examConfig,
+  questionConfig,
   onNextHandler,
   onPrevHandler,
-  setExamConfig,
+  setQuestionConfig,
+  isCondition,
+  updateIsCondition,
 }: StepTwoFRProps) {
   const { showNavBar } = useNavContext();
+  const { updateNotificationlist, emptyNotificationList } =
+    useNotificationContext();
 
   const deleteAnswer = (idx: number) => {
-    const newCorrect = [...examConfig.answers];
+    const newCorrect = [...questionConfig.answers];
     newCorrect.splice(idx, 1);
-    const newExamConfig: ExamConfig = {
-      ...examConfig,
+    const newQuestionConfig: QuestionConfig = {
+      ...questionConfig,
       answers: newCorrect,
     };
-    setExamConfig(newExamConfig);
+    setQuestionConfig(newQuestionConfig);
   };
 
   const addAnswer = () => {
-    setExamConfig({
-      ...examConfig,
+    setQuestionConfig({
+      ...questionConfig,
       answers: [
-        ...examConfig.answers,
-        { answer: "", isCorrect: true, image: null },
+        ...questionConfig.answers,
+        { answer: "", isCorrect: true, image: null, isCondition },
       ],
     });
   };
 
   const updateAnswer = (idx: number, value: string) => {
-    const newAnswers = [...examConfig.answers];
+    const newAnswers = [...questionConfig.answers];
     newAnswers[idx].answer = value;
-    setExamConfig({
-      ...examConfig,
+    setQuestionConfig({
+      ...questionConfig,
       answers: newAnswers,
     });
   };
 
   const resetData = () => {
-    setExamConfig({
-      ...examConfig,
+    setQuestionConfig({
+      ...questionConfig,
       question: {
         question: "",
         image: null,
@@ -62,18 +69,35 @@ export default function StepTwoFR({
 
   const stepCompleted = (): StepCompleted => {
     const errors: string[] = [];
-    if (examConfig.question.question === "") {
-      errors.push("Question statement must not be empty");
+    if (
+      questionConfig.question.question === "" &&
+      questionConfig.question.image === null
+    ) {
+      errors.push("Question must have either a statement or an image");
     }
 
-    if (examConfig.answers.length === 0) {
+    if (questionConfig.answers.length === 0) {
       errors.push("There must be at least 1 answer");
     }
 
+    if (questionConfig.question.image?.type.indexOf("image") === -1) {
+      errors.push("Uploaded file must be an image");
+    }
+
     if (
-      examConfig.answers.filter(({ answer }) => answer.length === 0).length > 0
+      questionConfig.answers.filter(
+        ({ answer, image }) => answer.length === 0 && image === null
+      ).length > 0
     ) {
-      errors.push("Answer statements must not be empty");
+      errors.push("Answer must either be a statement or an image");
+    }
+
+    if (
+      questionConfig.answers.filter(
+        ({ image }) => image && image.type.indexOf("image") === -1
+      ).length > 0
+    ) {
+      errors.push("Uploaded file must be an image");
     }
 
     return {
@@ -83,7 +107,8 @@ export default function StepTwoFR({
   };
 
   useEffect(() => {
-    if (examConfig.answers.length === 0) {
+    emptyNotificationList();
+    if (questionConfig.answers.length === 0) {
       addAnswer();
     }
   }, []);
@@ -96,21 +121,29 @@ export default function StepTwoFR({
       </div>
       {showNavBar ? (
         <FRRowView
-          examConfig={examConfig}
-          setExamConfig={(value) => {
-            setExamConfig(value);
+          questionConfig={questionConfig}
+          setQuestionConfig={(value) => {
+            setQuestionConfig(value);
           }}
           deleteAnswer={deleteAnswer}
           updateAnswer={updateAnswer}
+          isCondition={isCondition}
+          updateIsCondition={(value) => {
+            updateIsCondition(value);
+          }}
         />
       ) : (
         <FRColView
-          examConfig={examConfig}
-          setExamConfig={(value) => {
-            setExamConfig(value);
+          questionConfig={questionConfig}
+          setQuestionConfig={(value) => {
+            setQuestionConfig(value);
           }}
           deleteAnswer={deleteAnswer}
           updateAnswer={updateAnswer}
+          isCondition={isCondition}
+          updateIsCondition={(value) => {
+            updateIsCondition(value);
+          }}
         />
       )}
       <div className="flex flex-row justify-between">
@@ -138,10 +171,17 @@ export default function StepTwoFR({
             type="button"
             className="bg-green-400 p-3 rounded-lg text-white"
             onClick={() => {
-              // TODO: Implement function to check if step is completed
               const completed = stepCompleted();
-              if (completed.status) onNextHandler();
-              else console.log(completed.msg);
+              if (completed.status) {
+                onNextHandler();
+                return;
+              }
+              updateNotificationlist(
+                completed.msg.map((message) => ({
+                  type: "error",
+                  msg: message,
+                }))
+              );
             }}
           >
             Next

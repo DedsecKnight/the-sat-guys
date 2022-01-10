@@ -1,14 +1,21 @@
-import { useState } from "react";
-import { ExamConfig } from "../../interfaces/ExamConfig";
+import { useEffect, useState } from "react";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import StepOne from "./StepOne";
 import StepTwoMC from "./StepTwoMC";
 import StepTwoFR from "./StepTwoFR";
 import StepThree from "./StepThree";
 import ThankYou from "./ThankYou";
 
-export default function DonateView() {
+interface DonateViewProps {
+  topicList: Array<{
+    subtopic: string;
+    section: string;
+  }>;
+}
+
+export default function DonateView({ topicList }: DonateViewProps) {
   const [pageNumber, setPageNumber] = useState<number>(0);
-  const [examConfig, setExamConfig] = useState<ExamConfig>({
+  const [questionConfig, setQuestionConfig] = useState<QuestionConfig>({
     topic: "",
     section: "",
     difficulty: "",
@@ -19,6 +26,16 @@ export default function DonateView() {
     },
     answers: [],
   });
+  const [isCondition, setIsCondition] = useState(false);
+  const [filteredTopicList, setFilteredTopicList] = useState<typeof topicList>(
+    []
+  );
+
+  useEffect(() => {
+    setFilteredTopicList(
+      topicList.filter(({ section }) => section === questionConfig.section)
+    );
+  }, [questionConfig.section]);
 
   const nextPage = () => {
     setPageNumber((prev) => prev + 1);
@@ -28,34 +45,66 @@ export default function DonateView() {
     setPageNumber((prev) => prev - 1);
   };
 
-  const updateExamConfig = (value: ExamConfig) => {
-    setExamConfig(value);
+  const updateQuestionConfig = (value: QuestionConfig) => {
+    setQuestionConfig(value);
+  };
+
+  const onDonateAnotherHandler = () => {
+    setQuestionConfig({
+      topic: "",
+      section: "",
+      difficulty: "",
+      qtype: "",
+      question: {
+        question: "",
+        image: null,
+      },
+      answers: [],
+    });
+    setPageNumber(0);
   };
 
   if (pageNumber === 0) {
     return (
       <StepOne
-        examConfig={examConfig}
-        setExamConfig={updateExamConfig}
+        topics={filteredTopicList}
+        questionConfig={questionConfig}
+        setQuestionConfig={updateQuestionConfig}
         onNextHandler={nextPage}
       />
     );
   }
 
   if (pageNumber === 1) {
-    return examConfig.qtype === "mc" ? (
+    return questionConfig.qtype === "mc" ? (
       <StepTwoMC
-        examConfig={examConfig}
-        setExamConfig={updateExamConfig}
+        questionConfig={questionConfig}
+        setQuestionConfig={updateQuestionConfig}
         onNextHandler={nextPage}
         onPrevHandler={prevPage}
       />
     ) : (
       <StepTwoFR
-        examConfig={examConfig}
-        setExamConfig={updateExamConfig}
+        questionConfig={questionConfig}
+        setQuestionConfig={updateQuestionConfig}
         onNextHandler={nextPage}
         onPrevHandler={prevPage}
+        isCondition={isCondition}
+        updateIsCondition={(value) => {
+          if (value !== isCondition)
+            setQuestionConfig({
+              ...questionConfig,
+              answers: [
+                {
+                  answer: "",
+                  isCorrect: true,
+                  image: null,
+                  isCondition: value,
+                },
+              ],
+            });
+          setIsCondition(value);
+        }}
       />
     );
   }
@@ -63,19 +112,15 @@ export default function DonateView() {
   if (pageNumber === 2) {
     return (
       <StepThree
-        examConfig={examConfig}
-        onNextHandler={() => {
-          console.log(examConfig);
-          // TODO: Attempt to donate this question to db
-          nextPage();
-        }}
+        questionConfig={questionConfig}
+        onNextHandler={nextPage}
         onPrevHandler={prevPage}
       />
     );
   }
 
   if (pageNumber === 3) {
-    return <ThankYou />;
+    return <ThankYou onDonateAnother={onDonateAnotherHandler} />;
   }
 
   return <div></div>;

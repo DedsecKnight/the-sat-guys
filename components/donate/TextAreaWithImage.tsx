@@ -1,7 +1,9 @@
+import CustomFileInput from "./CustomFileInput";
+
 interface TextAreaWithImageProps {
   textValue: string;
   onChangeText: (value: string) => void;
-  imageValue: File;
+  imageValue: File | null;
   onChangeImage: (value: File) => void;
   placeholder: string;
 }
@@ -24,10 +26,10 @@ export default function TextAreaWithImage({
         placeholder={placeholder}
         value={textValue}
       ></textarea>
-      <input
-        type="file"
-        onChange={(e) => {
-          if (e.target.files) onChangeImage(e.target.files[0]);
+      <CustomFileInput
+        file={imageValue}
+        updateFile={(value) => {
+          onChangeImage(value);
         }}
       />
     </div>

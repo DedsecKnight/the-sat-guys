@@ -1,19 +1,18 @@
-import { useState } from "react";
-import { ExamConfig } from "../../interfaces/ExamConfig";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import { mockCorrectAnswerSelect } from "../../lib/donations";
 import CustomSelect from "./CustomSelect";
 import TextAreaWithImage from "./TextAreaWithImage";
 
 interface MCColViewProps {
-  examConfig: ExamConfig;
-  setExamConfig: (value: ExamConfig) => void;
+  questionConfig: QuestionConfig;
+  setQuestionConfig: (value: QuestionConfig) => void;
   correctValue: string;
   setCorrectValue: (value: string) => void;
 }
 
 export default function MCColView({
-  examConfig,
-  setExamConfig,
+  questionConfig,
+  setQuestionConfig,
   correctValue,
   setCorrectValue,
 }: MCColViewProps) {
@@ -23,22 +22,22 @@ export default function MCColView({
       <div className="w-full px-4">
         <TextAreaWithImage
           placeholder="Enter your question statement"
-          textValue={examConfig.question.question}
-          imageValue={examConfig.question.image}
+          textValue={questionConfig.question.question}
+          imageValue={questionConfig.question.image}
           onChangeText={(value) => {
-            setExamConfig({
-              ...examConfig,
+            setQuestionConfig({
+              ...questionConfig,
               question: {
-                ...examConfig.question,
+                ...questionConfig.question,
                 question: value,
               },
             });
           }}
           onChangeImage={(value) => {
-            setExamConfig({
-              ...examConfig,
+            setQuestionConfig({
+              ...questionConfig,
               question: {
-                ...examConfig.question,
+                ...questionConfig.question,
                 image: value,
               },
             });
@@ -50,21 +49,21 @@ export default function MCColView({
           <TextAreaWithImage
             key={letter}
             placeholder={`Enter your question's option ${letter.toUpperCase()}`}
-            textValue={examConfig.answers[idx].answer}
-            imageValue={examConfig.answers[idx].image}
+            textValue={questionConfig.answers[idx].answer}
+            imageValue={questionConfig.answers[idx].image}
             onChangeImage={(value) => {
-              const newAnswers = [...examConfig.answers];
+              const newAnswers = [...questionConfig.answers];
               newAnswers[idx].image = value;
-              setExamConfig({
-                ...examConfig,
+              setQuestionConfig({
+                ...questionConfig,
                 answers: newAnswers,
               });
             }}
             onChangeText={(value) => {
-              const newAnswers = [...examConfig.answers];
+              const newAnswers = [...questionConfig.answers];
               newAnswers[idx].answer = value;
-              setExamConfig({
-                ...examConfig,
+              setQuestionConfig({
+                ...questionConfig,
                 answers: newAnswers,
               });
             }}

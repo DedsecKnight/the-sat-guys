@@ -1,13 +1,17 @@
-import { ExamConfig } from "../../interfaces/ExamConfig";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
+import PreviewEntry from "./PreviewEntry";
 
 interface FRViewProps {
-  examConfig: ExamConfig;
+  questionConfig: QuestionConfig;
 }
 
-export default function FRView({ examConfig }: FRViewProps) {
+export default function FRView({ questionConfig }: FRViewProps) {
   return (
     <div className="border-2 rounded-xl py-3 px-7 my-8 xl:w-4/5 mx-auto">
-      <h1 className="text-xl">{examConfig.question.question}</h1>
+      <PreviewEntry
+        text={questionConfig.question.question}
+        image={questionConfig.question.image}
+      />
       <div className="p-6">
         <h1 className="text-lg">Type your answer here: ______________</h1>
       </div>

@@ -6,8 +6,9 @@ export default function StepFour({ difficulties }: StepFourProps) {
   return (
     <>
       <h1 className="text-xl">Step 4: Specify distribution in difficulty</h1>
-      {difficulties.map((difficulty) => (
+      {difficulties.map((difficulty, idx) => (
         <input
+          key={idx}
           type="text"
           className="rounded-lg p-3 border-2"
           placeholder={`Enter number of ${difficulty} questions`}

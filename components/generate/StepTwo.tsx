@@ -28,7 +28,7 @@ export default function StepTwo() {
   return (
     <>
       <h1 className="text-xl">
-        Step 2: Choose all sections you'd like to work on
+        {`Step 2: Choose all sections you'd like to work on`}
       </h1>
       <CustomCheckbox name="exam_section" options={radioList} />
       <div className="flex flex-row justify-between">

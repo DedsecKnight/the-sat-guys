@@ -1,27 +1,56 @@
-import { ExamConfig } from "../../interfaces/ExamConfig";
+import { useEffect } from "react";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
+import { RequestHelper } from "../../lib/request-helper";
+import { useLoadingContext } from "../context-api/LoadingContext";
+import { useNotificationContext } from "../context-api/NotificationContext";
 import FRView from "./FRView";
 import MCView from "./MCView";
 
 interface StepThreeProps {
-  examConfig: ExamConfig;
+  questionConfig: QuestionConfig;
   onNextHandler: () => void;
   onPrevHandler: () => void;
 }
 
 export default function StepThree({
-  examConfig,
+  questionConfig,
   onNextHandler,
   onPrevHandler,
 }: StepThreeProps) {
+  const { toggleLoading } = useLoadingContext();
+  const { updateNotificationlist, emptyNotificationList } =
+    useNotificationContext();
+
+  useEffect(() => {
+    emptyNotificationList();
+  }, []);
+
+  const submitQuestion = async () => {
+    return RequestHelper.post<
+      {
+        action: string;
+        questionConfig: QuestionConfig;
+      },
+      string
+    >(
+      "/api/donate",
+      { "Content-Type": "application/json" },
+      {
+        action: "donate",
+        questionConfig,
+      }
+    );
+  };
+
   return (
     <>
       <div>
         <h1 className="text-xl">Step 3: Confirm your question</h1>
         <h1>Here is what your question will look like on an exam</h1>
-        {examConfig.qtype === "mc" ? (
-          <MCView examConfig={examConfig} />
+        {questionConfig.qtype === "mc" ? (
+          <MCView questionConfig={questionConfig} />
         ) : (
-          <FRView examConfig={examConfig} />
+          <FRView questionConfig={questionConfig} />
         )}
         <div className="flex flex-row justify-between">
           <button
@@ -36,11 +65,29 @@ export default function StepThree({
           <button
             type="button"
             className="bg-green-400 p-3 rounded-lg text-white"
-            onClick={() => {
-              onNextHandler();
+            onClick={async () => {
+              toggleLoading();
+              try {
+                const { status, data } = await submitQuestion();
+                updateNotificationlist([
+                  { type: status ? "success" : "error", msg: data },
+                ]);
+                toggleLoading();
+                if (status) {
+                  onNextHandler();
+                }
+              } catch (error) {
+                updateNotificationlist([
+                  {
+                    type: "error",
+                    msg: "Unexpected error occurred, please try again later!",
+                  },
+                ]);
+                toggleLoading();
+              }
             }}
           >
-            Next
+            Submit
           </button>
         </div>
       </div>

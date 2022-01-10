@@ -1,19 +1,27 @@
 import { useEffect, useState } from "react";
-import { ExamConfig } from "../../interfaces/ExamConfig";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
 import { StepCompleted } from "../../interfaces/StepCompleted";
+import { useNotificationContext } from "../context-api/NotificationContext";
 import CustomSelect, { CustomOptionItemProps } from "./CustomSelect";
 
 interface StepOneProps {
-  examConfig: ExamConfig;
-  setExamConfig: (value: ExamConfig) => void;
+  topics: Array<{
+    subtopic: string;
+    section: string;
+  }>;
+  questionConfig: QuestionConfig;
+  setQuestionConfig: (value: QuestionConfig) => void;
   onNextHandler: () => void;
 }
 
 export default function StepOne({
-  examConfig,
-  setExamConfig,
+  questionConfig,
+  setQuestionConfig,
   onNextHandler,
+  topics,
 }: StepOneProps) {
+  const { updateNotificationlist, emptyNotificationList } =
+    useNotificationContext();
   const [topicList, setTopicList] = useState<CustomOptionItemProps[]>([]);
   const [diffList, setDiffList] = useState<CustomOptionItemProps[]>([]);
   const [sectionList, setSectionList] = useState<CustomOptionItemProps[]>([]);
@@ -21,23 +29,24 @@ export default function StepOne({
 
   const stepCompleted = (): StepCompleted => {
     const errors: string[] = [];
-    if (examConfig.qtype !== "mc" && examConfig.qtype !== "fr") {
+    if (questionConfig.qtype !== "mc" && questionConfig.qtype !== "fr") {
       errors.push("Invalid question type found");
     }
     if (
-      topicList.filter(({ value }) => value === examConfig.topic).length === 0
+      topicList.filter(({ value }) => value === questionConfig.topic).length ===
+      0
     ) {
       errors.push("Invalid topic found");
     }
     if (
-      sectionList.filter(({ value }) => value === examConfig.section).length ===
-      0
+      sectionList.filter(({ value }) => value === questionConfig.section)
+        .length === 0
     ) {
       errors.push("Invalid section found");
     }
     if (
-      diffList.filter(({ value }) => value === examConfig.difficulty).length ===
-      0
+      diffList.filter(({ value }) => value === questionConfig.difficulty)
+        .length === 0
     ) {
       errors.push("Invalid difficulty found");
     }
@@ -47,25 +56,23 @@ export default function StepOne({
     };
   };
 
-  const fetchTopicList = () => {
-    return [
-      {
-        value: "probability",
-        option: "Probability",
-      },
-      {
-        value: "algebra",
-        option: "Algebra",
-      },
-      {
-        value: "geometry",
-        option: "Geometry",
-      },
-    ];
-  };
+  useEffect(() => {
+    emptyNotificationList();
+  }, []);
 
-  const fetchDiffList = () => {
-    return [
+  useEffect(() => {
+    setTopicList(
+      topics
+        .filter(({ section }) => section === questionConfig.section)
+        .map(({ subtopic }) => ({
+          value: subtopic,
+          option: subtopic,
+        }))
+    );
+  }, [topics]);
+
+  useEffect(() => {
+    setDiffList([
       {
         value: "easy",
         option: "Easy",
@@ -78,11 +85,8 @@ export default function StepOne({
         value: "hard",
         option: "Hard",
       },
-    ];
-  };
-
-  const fetchSectionList = () => {
-    return [
+    ]);
+    setSectionList([
       {
         value: "reading",
         option: "Reading",
@@ -92,14 +96,15 @@ export default function StepOne({
         option: "Writing",
       },
       {
-        value: "math",
-        option: "Math",
+        value: "cal",
+        option: "Math (Calculator)",
       },
-    ];
-  };
-
-  const fetchQTypeList = () => {
-    return [
+      {
+        value: "no_cal",
+        option: "Math (No Calculator)",
+      },
+    ]);
+    setQTypeList([
       {
         value: "mc",
         option: "Multiple Choice",
@@ -108,30 +113,36 @@ export default function StepOne({
         value: "fr",
         option: "Free Response",
       },
-    ];
-  };
-
-  useEffect(() => {
-    setTopicList(fetchTopicList());
-    setDiffList(fetchDiffList());
-    setSectionList(fetchSectionList());
-    setQTypeList(fetchQTypeList());
+    ]);
   }, []);
 
   return (
     <>
       <h1 className="text-xl">
-        Step 1: Let's get started with some basic information
+        {`Step 1: Let's get started with some basic information`}
       </h1>
       <div className="flex flex-col gap-y-4">
+        <CustomSelect
+          name="section"
+          defaultOption="Select your question's section"
+          options={sectionList}
+          value={questionConfig.section}
+          onChangeHandler={(e) => {
+            setQuestionConfig({
+              ...questionConfig,
+              section: e.target.value,
+              topic: "",
+            });
+          }}
+        />
         <CustomSelect
           name="topic"
           defaultOption="Select your question's topic"
           options={topicList}
-          value={examConfig.topic}
+          value={questionConfig.topic}
           onChangeHandler={(e) => {
-            setExamConfig({
-              ...examConfig,
+            setQuestionConfig({
+              ...questionConfig,
               topic: e.target.value,
             });
           }}
@@ -140,34 +151,23 @@ export default function StepOne({
           name="difficulty"
           defaultOption="Select your question's difficulty"
           options={diffList}
-          value={examConfig.difficulty}
+          value={questionConfig.difficulty}
           onChangeHandler={(e) => {
-            setExamConfig({
-              ...examConfig,
+            setQuestionConfig({
+              ...questionConfig,
               difficulty: e.target.value,
             });
           }}
         />
-        <CustomSelect
-          name="section"
-          defaultOption="Select your question's section"
-          options={sectionList}
-          value={examConfig.section}
-          onChangeHandler={(e) => {
-            setExamConfig({
-              ...examConfig,
-              section: e.target.value,
-            });
-          }}
-        />
+
         <CustomSelect
           name="qtype"
           defaultOption="Select your question's question type"
           options={qTypeList}
-          value={examConfig.qtype}
+          value={questionConfig.qtype}
           onChangeHandler={(e) => {
-            setExamConfig({
-              ...examConfig,
+            setQuestionConfig({
+              ...questionConfig,
               qtype: e.target.value,
             });
           }}
@@ -179,8 +179,16 @@ export default function StepOne({
           className="rounded-lg bg-green-400 p-3 text-white"
           onClick={() => {
             const completed = stepCompleted();
-            if (completed.status) onNextHandler();
-            else console.log(completed.msg);
+            if (completed.status) {
+              onNextHandler();
+              return;
+            }
+            updateNotificationlist(
+              completed.msg.map((message) => ({
+                type: "error",
+                msg: message,
+              }))
+            );
           }}
         >
           Next

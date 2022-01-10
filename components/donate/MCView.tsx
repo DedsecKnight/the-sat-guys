@@ -1,21 +1,39 @@
-import { ExamConfig } from "../../interfaces/ExamConfig";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
+import PreviewEntry from "./PreviewEntry";
 
 interface MCViewProps {
-  examConfig: ExamConfig;
+  questionConfig: QuestionConfig;
 }
 
-export default function MCView({ examConfig }: MCViewProps) {
+export default function MCView({ questionConfig }: MCViewProps) {
   return (
     <div className="border-2 rounded-xl py-3 px-7 my-8 xl:w-4/5 mx-auto">
-      <h1 className="text-xl">{examConfig.question.question}</h1>
+      <div className="w-full">
+        <PreviewEntry
+          text={questionConfig.question.question}
+          image={questionConfig.question.image}
+        />
+      </div>
       <div className="p-4 flex flex-col">
-        <div className="flex flex-row justify-around my-1">
-          <h1 className="text-lg">A. {examConfig.answers[0].answer}</h1>
-          <h1 className="text-lg">B. {examConfig.answers[1].answer}</h1>
+        <div className="flex flex-row justify-around my-1 gap-x-4">
+          <PreviewEntry
+            text={`A. ${questionConfig.answers[0].answer}`}
+            image={questionConfig.answers[0].image}
+          />
+          <PreviewEntry
+            text={`B. ${questionConfig.answers[1].answer}`}
+            image={questionConfig.answers[1].image}
+          />
         </div>
-        <div className="flex flex-row justify-around my-1">
-          <h1 className="text-lg">C. {examConfig.answers[2].answer}</h1>
-          <h1 className="text-lg">D. {examConfig.answers[3].answer}</h1>
+        <div className="flex flex-row justify-around my-1 gap-x-4">
+          <PreviewEntry
+            text={`C. ${questionConfig.answers[2].answer}`}
+            image={questionConfig.answers[2].image}
+          />
+          <PreviewEntry
+            text={`D. ${questionConfig.answers[3].answer}`}
+            image={questionConfig.answers[3].image}
+          />
         </div>
       </div>
     </div>
