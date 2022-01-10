@@ -39,7 +39,7 @@ export default function CustomRadio({ name, options }: CustomRadioProps) {
   return (
     <fieldset className="p-3">
       {options.map(({ id, value, option }) => (
-        <RadioItem id={id} name={name} value={value} option={option} />
+        <RadioItem key={id} id={id} name={name} value={value} option={option} />
       ))}
     </fieldset>
   );

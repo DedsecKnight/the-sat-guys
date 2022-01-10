@@ -39,7 +39,13 @@ export default function CustomCheckbox({ name, options }: CustomCheckboxProps) {
   return (
     <fieldset className="p-3">
       {options.map(({ id, value, option }) => (
-        <CheckboxItem id={id} name={name} value={value} option={option} />
+        <CheckboxItem
+          key={id}
+          id={id}
+          name={name}
+          value={value}
+          option={option}
+        />
       ))}
     </fieldset>
   );

@@ -119,7 +119,7 @@ export default function StepOne({
   return (
     <>
       <h1 className="text-xl">
-        Step 1: Let's get started with some basic information
+        {`Step 1: Let's get started with some basic information`}
       </h1>
       <div className="flex flex-col gap-y-4">
         <CustomSelect

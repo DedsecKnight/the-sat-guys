@@ -16,7 +16,7 @@ export default function GeneratePage() {
 
   return (
     <div className="my-10 flex flex-col gap-y-6">
-      <h1 className="text-3xl font-bold">Let's get you prepared for an exam</h1>
+      <h1 className="text-3xl font-bold">{`Let's get you prepared for an exam`}</h1>
       <StepOne />
     </div>
   );
