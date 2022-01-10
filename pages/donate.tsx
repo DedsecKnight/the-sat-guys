@@ -27,9 +27,11 @@ export default function DonatePage({ topicList }: DonatePageProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const protocol = context.req.headers.referer?.split("://")[0] || "http";
+
   const { data: topicList } = await RequestHelper.get<
     Array<{ subtopic: string; section: string }>
-  >("http://localhost:3000/api/topic", {});
+  >(`${protocol}://${context.req.headers.host}/api/topic`, {});
   return {
     props: {
       topicList,
