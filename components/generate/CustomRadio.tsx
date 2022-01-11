@@ -10,6 +10,7 @@ interface RadioItemProps {
   value: string;
   option: string;
   currentValue: string;
+  onChangeHandler: (value: string) => void;
 }
 
 interface CustomRadioProps {
@@ -19,7 +20,14 @@ interface CustomRadioProps {
   onChangeHandler: (value: string) => void;
 }
 
-function RadioItem({ id, name, value, option, currentValue }: RadioItemProps) {
+function RadioItem({
+  id,
+  name,
+  value,
+  option,
+  currentValue,
+  onChangeHandler,
+}: RadioItemProps) {
   return (
     <div className="flex items-center mb-4">
       <input
@@ -31,6 +39,9 @@ function RadioItem({ id, name, value, option, currentValue }: RadioItemProps) {
         aria-labelledby={id}
         aria-describedby={id}
         checked={value === currentValue}
+        onChange={(e) => {
+          onChangeHandler((e.target as any).value);
+        }}
       />
       <label htmlFor={id} className="text-lg text-gray-900 ml-2 block">
         {option}
@@ -46,12 +57,7 @@ export default function CustomRadio({
   currentValue,
 }: CustomRadioProps) {
   return (
-    <fieldset
-      className="p-3"
-      onChange={(e) => {
-        onChangeHandler((e.target as any).value);
-      }}
-    >
+    <fieldset className="p-3">
       {options.map(({ id, value, option }) => (
         <RadioItem
           key={id}
@@ -60,6 +66,9 @@ export default function CustomRadio({
           value={value}
           option={option}
           currentValue={currentValue}
+          onChangeHandler={(value) => {
+            onChangeHandler(value);
+          }}
         />
       ))}
     </fieldset>

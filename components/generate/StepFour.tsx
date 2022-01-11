@@ -1,46 +1,48 @@
 import { GenerateConfig } from "../../interfaces/GenerateConfig";
-import CustomRadio from "./CustomRadio";
-
-const radioData = {
-  name: "final_action",
-  options: [
-    {
-      id: "view_exam",
-      value: "view_exam",
-      option: "View Exam",
-    },
-    {
-      id: "start_exam",
-      value: "start_exam",
-      option: "Start Exam",
-    },
-  ],
-};
+import DifficultyCard from "./DifficultyCard";
+import SectionCard from "./SectionCard";
 
 interface StepFourProps {
   generateConfig: GenerateConfig;
+  onPrevHandler: () => void;
+  onSubmitHandler: () => void;
 }
 
-export default function StepFour({ generateConfig }: StepFourProps) {
-  console.log(generateConfig);
+export default function StepFour({
+  generateConfig,
+  onPrevHandler,
+  onSubmitHandler,
+}: StepFourProps) {
   return (
-    <div></div>
-    // <>
-    //   <h1 className="text-xl">Step 5: Choose an action</h1>
-    //   <div className="border-2 rounded-lg p-4">
-    //     <CustomRadio name="final_action" options={radioData.options} />
-    //   </div>
-    //   <div className="flex flex-row justify-between">
-    //     <button type="button" className="bg-gray-200 p-3 rounded-lg">
-    //       Previous
-    //     </button>
-    //     <button
-    //       type="button"
-    //       className="bg-green-400 p-3 rounded-lg text-white"
-    //     >
-    //       Confirm
-    //     </button>
-    //   </div>
-    // </>
+    <>
+      <h1 className="text-xl">{`Step 4: Let's review your configuration`}</h1>
+      <div className="flex flex-col gap-y-6">
+        {generateConfig.sections.map((section, idx) => (
+          <SectionCard key={idx} section={section} />
+        ))}
+        <DifficultyCard diffDist={generateConfig.diffDist} />
+      </div>
+
+      <div className="flex flex-row justify-between">
+        <button
+          type="button"
+          className="bg-gray-200 p-3 rounded-lg"
+          onClick={() => {
+            onPrevHandler();
+          }}
+        >
+          Previous
+        </button>
+        <button
+          type="button"
+          className="bg-green-400 p-3 rounded-lg text-white"
+          onClick={() => {
+            onSubmitHandler();
+          }}
+        >
+          Submit
+        </button>
+      </div>
+    </>
   );
 }

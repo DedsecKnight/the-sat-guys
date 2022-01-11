@@ -5,6 +5,7 @@ import InitStep from "./InitStep";
 import SectionView from "./SectionView";
 import StepFour from "./StepFour";
 import { diffList, sectionList } from "../../lib/generate";
+import StepFive from "./StepFive";
 
 interface GenerateViewProps {
   topicList: Array<{ subtopic: string; section: string }>;
@@ -124,7 +125,20 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
   }
 
   if (pageNumber - generateConfig.sections.length === 2) {
-    return <StepFour generateConfig={generateConfig} />;
+    return (
+      <StepFour
+        generateConfig={generateConfig}
+        onSubmitHandler={() => {
+          // TODO: Attempt to send generateConfig to backend
+          nextPage();
+        }}
+        onPrevHandler={prevPage}
+      />
+    );
+  }
+
+  if (pageNumber - generateConfig.sections.length === 3) {
+    return <StepFive generateConfig={generateConfig} />;
   }
 
   return <div></div>;
