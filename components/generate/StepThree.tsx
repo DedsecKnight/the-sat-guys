@@ -1,34 +1,33 @@
 import { DistItem } from "../../interfaces/GenerateConfig";
-import DistributionView from "./DistributionView";
 
-interface StepTwoDistProps {
-  sectionName: string;
-  topicList: DistItem[];
+interface StepThreeProps {
+  difficulties: DistItem[];
   onNextHandler: () => void;
   onPrevHandler: () => void;
-  updateTopicList: (value: DistItem[]) => void;
+  updateDistItem: (idx: number, value: number) => void;
 }
 
-export default function StepTwoDistTopic({
-  sectionName,
-  topicList,
+export default function StepThree({
+  difficulties,
   onNextHandler,
   onPrevHandler,
-  updateTopicList,
-}: StepTwoDistProps) {
+  updateDistItem,
+}: StepThreeProps) {
   return (
     <>
-      <h1 className="text-xl">
-        Step 2: Specify distribution in topics for {sectionName}
-      </h1>
-      <DistributionView
-        topicList={topicList}
-        updateTopicItem={(idx, value) => {
-          const newTopicList = topicList.map((obj) => ({ ...obj }));
-          newTopicList[idx].count = value;
-          updateTopicList(newTopicList);
-        }}
-      />
+      <h1 className="text-xl">Step 4: Specify distribution in difficulty</h1>
+      {difficulties.map(({ value: difficulty, count }, idx) => (
+        <input
+          key={idx}
+          type="number"
+          className="rounded-lg p-3 border-2"
+          placeholder={`Enter number of ${difficulty} questions`}
+          value={count}
+          onChange={(e) => {
+            updateDistItem(idx, parseInt(e.target.value));
+          }}
+        />
+      ))}
       <div className="flex flex-row justify-between">
         <button
           type="button"

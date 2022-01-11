@@ -10,7 +10,6 @@ interface SectionConfigProps {
   onBackHandler: () => void;
   currentPage: number;
   updateCurrentPage: (value: number) => void;
-  topicList: string[];
 }
 
 export default function SectionView({
@@ -20,21 +19,25 @@ export default function SectionView({
   onFinishHandler,
   currentPage,
   updateCurrentPage,
-  topicList,
 }: SectionConfigProps) {
+  const nextPage = () => {
+    updateCurrentPage(currentPage + 1);
+  };
+
+  const prevPage = () => {
+    updateCurrentPage(currentPage - 1);
+  };
+
   if (currentPage === 0)
     return (
       <StepOne
         sectionConfig={sectionConfig}
         updateSectionConfig={updateSectionConfig}
         onNextHandler={() => {
-          if (sectionConfig.style !== "normal")
-            updateCurrentPage(currentPage + 1);
+          if (sectionConfig.style !== "normal") nextPage();
           else onFinishHandler();
         }}
-        onPrevHandler={() => {
-          onBackHandler();
-        }}
+        onPrevHandler={onBackHandler}
       />
     );
 
@@ -43,12 +46,14 @@ export default function SectionView({
       return (
         <StepTwoDistTopic
           sectionName={sectionConfig.section}
-          topicList={topicList}
-          onNextHandler={() => {
-            onFinishHandler();
-          }}
-          onPrevHandler={() => {
-            updateCurrentPage(currentPage - 1);
+          topicList={sectionConfig.topicDist}
+          onNextHandler={onFinishHandler}
+          onPrevHandler={prevPage}
+          updateTopicList={(value) => {
+            updateSectionConfig({
+              ...sectionConfig,
+              topicDist: value,
+            });
           }}
         />
       );
@@ -56,12 +61,15 @@ export default function SectionView({
     if (sectionConfig.style === "total") {
       return (
         <StepTwoTotal
-          onNextHandler={() => {
-            onFinishHandler();
+          totalQuestion={sectionConfig.totalQuestion}
+          updateTotalQuestion={(value) => {
+            updateSectionConfig({
+              ...sectionConfig,
+              totalQuestion: value,
+            });
           }}
-          onPrevHandler={() => {
-            updateCurrentPage(currentPage - 1);
-          }}
+          onNextHandler={onFinishHandler}
+          onPrevHandler={prevPage}
         />
       );
     }

@@ -1,8 +1,9 @@
 export interface GenerateConfig {
   sections: SectionConfig[];
+  diffDist: DistItem[];
 }
 
-interface DistItem {
+export interface DistItem {
   value: string;
   count: number;
 }
@@ -12,5 +13,4 @@ export interface SectionConfig {
   style: string;
   totalQuestion: number;
   topicDist: DistItem[];
-  diffDist: DistItem[];
 }

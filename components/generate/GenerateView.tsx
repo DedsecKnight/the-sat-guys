@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { GenerateConfig } from "../../interfaces/GenerateConfig";
+import StepThree from "./StepThree";
 import InitStep from "./InitStep";
 import SectionView from "./SectionView";
+import StepFour from "./StepFour";
 
 interface GenerateViewProps {
   topicList: Array<{ subtopic: string; section: string }>;
@@ -11,6 +13,10 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
   const [pageNumber, setPageNumber] = useState<number>(0);
   const [generateConfig, setGenerateConfig] = useState<GenerateConfig>({
     sections: [],
+    diffDist: ["easy", "normal", "hard"].map((diff) => ({
+      value: diff,
+      count: 0,
+    })),
   });
   const [sectionPageNumber, setSectionPageNumber] = useState<number[]>([]);
 
@@ -27,12 +33,17 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
       <InitStep
         updateSectionList={(value) => {
           setGenerateConfig({
+            ...generateConfig,
             sections: value.map((section) => ({
               section,
               style: "",
               totalQuestion: 0,
-              topicDist: [],
-              diffDist: [],
+              topicDist: topicList
+                .filter((obj) => obj.section === section)
+                .map(({ subtopic }) => ({
+                  value: subtopic,
+                  count: 0,
+                })),
             })),
           });
           setSectionPageNumber(value.map(() => 0));
@@ -50,6 +61,7 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
           const newConfig = generateConfig.sections.map((obj) => ({ ...obj }));
           newConfig[pageNumber - 1] = value;
           setGenerateConfig({
+            ...generateConfig,
             sections: newConfig,
           });
         }}
@@ -61,14 +73,32 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
           newData[pageNumber - 1] = value;
           setSectionPageNumber(newData);
         }}
-        topicList={topicList
-          .filter(
-            ({ section }) =>
-              section === generateConfig.sections[pageNumber - 1].section
-          )
-          .map(({ subtopic }) => subtopic)}
       />
     );
+  }
+
+  if (pageNumber - generateConfig.sections.length === 1) {
+    return (
+      <StepThree
+        difficulties={generateConfig.diffDist}
+        onNextHandler={nextPage}
+        onPrevHandler={prevPage}
+        updateDistItem={(idx, value) => {
+          const newDiffDist = generateConfig.diffDist.map((obj) => ({
+            ...obj,
+          }));
+          newDiffDist[idx].count = value;
+          setGenerateConfig({
+            ...generateConfig,
+            diffDist: newDiffDist,
+          });
+        }}
+      />
+    );
+  }
+
+  if (pageNumber - generateConfig.sections.length === 2) {
+    return <StepFour generateConfig={generateConfig} />;
   }
 
   return <div></div>;

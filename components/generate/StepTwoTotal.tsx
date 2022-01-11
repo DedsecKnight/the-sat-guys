@@ -1,17 +1,25 @@
-interface StepThreeTotalProps {
+interface StepTwoTotalProps {
+  totalQuestion: number;
+  updateTotalQuestion: (value: number) => void;
   onNextHandler: () => void;
   onPrevHandler: () => void;
 }
 
-export default function StepThreeTotal({
+export default function StepTwoTotal({
   onNextHandler,
   onPrevHandler,
-}: StepThreeTotalProps) {
+  totalQuestion,
+  updateTotalQuestion,
+}: StepTwoTotalProps) {
   return (
     <>
       <h1 className="text-xl">Step 3: Specify the number of questions</h1>
       <input
-        type="text"
+        type="number"
+        value={totalQuestion}
+        onChange={(e) => {
+          updateTotalQuestion(parseInt(e.target.value));
+        }}
         className="w-full rounded-xl p-2 border-2"
         placeholder="Enter number of questions"
       />
