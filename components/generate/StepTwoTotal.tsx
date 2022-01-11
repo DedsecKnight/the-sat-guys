@@ -34,7 +34,7 @@ export default function StepTwoTotal({
         type="number"
         value={totalQuestion}
         onChange={(e) => {
-          updateTotalQuestion(parseInt(e.target.value));
+          updateTotalQuestion(parseInt(e.target.value) || 0);
         }}
         className="w-full rounded-xl p-2 border-2"
         placeholder="Enter number of questions"

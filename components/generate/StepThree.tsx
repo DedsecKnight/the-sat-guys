@@ -48,7 +48,7 @@ export default function StepThree({
           placeholder={`Enter number of ${difficulty} questions`}
           value={count}
           onChange={(e) => {
-            updateDistItem(idx, parseInt(e.target.value));
+            updateDistItem(idx, parseInt(e.target.value) || 0);
           }}
         />
       ))}

@@ -17,7 +17,7 @@ export default function DistributionView({
             type="number"
             value={count}
             onChange={(e) => {
-              updateTopicItem(idx, parseInt(e.target.value));
+              updateTopicItem(idx, parseInt(e.target.value) || 0);
             }}
             className="rounded-xl p-3 border-2 w-20 h-8"
           />
