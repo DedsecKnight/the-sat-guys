@@ -104,6 +104,21 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
             diffDist: newDiffDist,
           });
         }}
+        getTotalQuestion={() => {
+          let totalQuestions = 0;
+          for (let section of generateConfig.sections) {
+            if (section.style === "specific") {
+              for (let { count } of section.topicDist) {
+                totalQuestions += count;
+              }
+            } else if (section.style === "total") {
+              totalQuestions += section.totalQuestion;
+            } else {
+              totalQuestions += 57;
+            }
+          }
+          return totalQuestions;
+        }}
       />
     );
   }

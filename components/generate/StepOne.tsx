@@ -1,6 +1,8 @@
 import CustomRadio from "./CustomRadio";
 import { SectionConfig } from "../../interfaces/GenerateConfig";
 import { strategyList } from "../../lib/generate";
+import { StepCompleted } from "../../interfaces/StepCompleted";
+import { useNotificationContext } from "../context-api/NotificationContext";
 
 interface StepOneProps {
   sectionConfig: SectionConfig;
@@ -15,6 +17,18 @@ export default function StepOne({
   onNextHandler,
   onPrevHandler,
 }: StepOneProps) {
+  const { updateNotificationlist } = useNotificationContext();
+
+  const stepCompleted = (): StepCompleted => {
+    const errors: string[] = [];
+    if (sectionConfig.style === "") {
+      errors.push("Please specify an option");
+    }
+    return {
+      status: errors.length === 0,
+      msg: errors,
+    };
+  };
   return (
     <>
       <h1 className="text-xl">
@@ -45,7 +59,15 @@ export default function StepOne({
           type="button"
           className="bg-green-400 p-3 rounded-lg text-white"
           onClick={() => {
-            onNextHandler();
+            const { status, msg } = stepCompleted();
+            if (status) onNextHandler();
+            else
+              updateNotificationlist(
+                msg.map((err) => ({
+                  type: "error",
+                  msg: err,
+                }))
+              );
           }}
         >
           Next

@@ -1,4 +1,6 @@
 import { DistItem } from "../../interfaces/GenerateConfig";
+import { StepCompleted } from "../../interfaces/StepCompleted";
+import { useNotificationContext } from "../context-api/NotificationContext";
 import DistributionView from "./DistributionView";
 
 interface StepTwoDistProps {
@@ -16,6 +18,22 @@ export default function StepTwoDistTopic({
   onPrevHandler,
   updateTopicList,
 }: StepTwoDistProps) {
+  const { updateNotificationlist } = useNotificationContext();
+  const stepCompleted = (): StepCompleted => {
+    const errors = [];
+    let currTotalQuestions = 0;
+    for (let topic of topicList) {
+      currTotalQuestions += topic.count;
+    }
+    if (currTotalQuestions <= 0) {
+      errors.push("At least 1 question is required");
+    }
+    return {
+      status: errors.length === 0,
+      msg: errors,
+    };
+  };
+
   return (
     <>
       <h1 className="text-xl">
@@ -43,7 +61,15 @@ export default function StepTwoDistTopic({
           type="button"
           className="bg-green-400 p-3 rounded-lg text-white"
           onClick={() => {
-            onNextHandler();
+            const { status, msg } = stepCompleted();
+            if (status) onNextHandler();
+            else
+              updateNotificationlist(
+                msg.map((err) => ({
+                  type: "error",
+                  msg: err,
+                }))
+              );
           }}
         >
           Next

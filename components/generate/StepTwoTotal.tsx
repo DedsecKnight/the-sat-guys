@@ -1,3 +1,6 @@
+import { StepCompleted } from "../../interfaces/StepCompleted";
+import { useNotificationContext } from "../context-api/NotificationContext";
+
 interface StepTwoTotalProps {
   totalQuestion: number;
   updateTotalQuestion: (value: number) => void;
@@ -11,6 +14,19 @@ export default function StepTwoTotal({
   totalQuestion,
   updateTotalQuestion,
 }: StepTwoTotalProps) {
+  const { updateNotificationlist } = useNotificationContext();
+
+  const stepCompleted = (): StepCompleted => {
+    const errors = [];
+    if (totalQuestion <= 0) {
+      errors.push("At least 1 question is required");
+    }
+    return {
+      status: errors.length === 0,
+      msg: errors,
+    };
+  };
+
   return (
     <>
       <h1 className="text-xl">Step 3: Specify the number of questions</h1>
@@ -37,7 +53,15 @@ export default function StepTwoTotal({
           type="button"
           className="bg-green-400 p-3 rounded-lg text-white"
           onClick={() => {
-            onNextHandler();
+            const { status, msg } = stepCompleted();
+            if (status) onNextHandler();
+            else
+              updateNotificationlist(
+                msg.map((err) => ({
+                  type: "error",
+                  msg: err,
+                }))
+              );
           }}
         >
           Next
