@@ -1,5 +1,5 @@
 import { StepCompleted } from "../../interfaces/StepCompleted";
-import { checkboxList } from "../../lib/generate";
+import { sectionList } from "../../lib/generate";
 import { useNotificationContext } from "../context-api/NotificationContext";
 import CustomCheckbox from "./CustomCheckbox";
 
@@ -43,7 +43,7 @@ export default function InitStep({
       <h1 className="text-xl">{`Choose all sections you'd like to work on`}</h1>
       <CustomCheckbox
         name="exam_section"
-        options={checkboxList}
+        options={sectionList}
         checkedState={checkedSection.map(({ checked }) => checked)}
         updateCheckedState={(value) => {
           updateCheckedSection(

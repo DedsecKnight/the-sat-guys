@@ -4,7 +4,7 @@ import StepThree from "./StepThree";
 import InitStep from "./InitStep";
 import SectionView from "./SectionView";
 import StepFour from "./StepFour";
-import { checkboxList } from "../../lib/generate";
+import { diffList, sectionList } from "../../lib/generate";
 
 interface GenerateViewProps {
   topicList: Array<{ subtopic: string; section: string }>;
@@ -14,14 +14,14 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
   const [pageNumber, setPageNumber] = useState<number>(0);
   const [generateConfig, setGenerateConfig] = useState<GenerateConfig>({
     sections: [],
-    diffDist: ["easy", "normal", "hard"].map((diff) => ({
+    diffDist: diffList.map((diff) => ({
       value: diff,
       count: 0,
     })),
   });
   const [sectionPageNumber, setSectionPageNumber] = useState<number[]>([]);
   const [checkedSection, setCheckedSection] = useState(
-    checkboxList.map(({ value }) => ({
+    sectionList.map(({ value }) => ({
       section: value,
       checked: false,
     }))

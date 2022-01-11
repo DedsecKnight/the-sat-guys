@@ -1,26 +1,6 @@
-import { RadioItemData } from "./CustomRadio";
 import CustomRadio from "./CustomRadio";
 import { SectionConfig } from "../../interfaces/GenerateConfig";
-
-const radioList: RadioItemData[] = [
-  {
-    id: "specific_strategy",
-    value: "specific",
-    option:
-      "I want to specify the number of questions for each topic and sections",
-  },
-  {
-    id: "total_strategy",
-    value: "total",
-    option:
-      "I just need a certain amount of question. I don't care how it is distributed among the sections.",
-  },
-  {
-    id: "normal_strategy",
-    value: "normal",
-    option: "I just need a normal SAT exam.",
-  },
-];
+import { strategyList } from "../../lib/generate";
 
 interface StepOneProps {
   sectionConfig: SectionConfig;
@@ -43,7 +23,7 @@ export default function StepOne({
       <CustomRadio
         name="exam_style"
         currentValue={sectionConfig.style}
-        options={radioList}
+        options={strategyList}
         onChangeHandler={(value) => {
           updateSectionConfig({
             ...sectionConfig,
