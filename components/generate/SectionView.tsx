@@ -1,10 +1,16 @@
 import { SectionConfig } from "../../interfaces/GenerateConfig";
+import StepOne from "./StepOne";
+import StepTwoDistTopic from "./StepTwoDistTopic";
+import StepTwoTotal from "./StepTwoTotal";
 
 interface SectionConfigProps {
   sectionConfig: SectionConfig;
   updateSectionConfig: (value: SectionConfig) => void;
   onFinishHandler: () => void;
   onBackHandler: () => void;
+  currentPage: number;
+  updateCurrentPage: (value: number) => void;
+  topicList: string[];
 }
 
 export default function SectionView({
@@ -12,30 +18,55 @@ export default function SectionView({
   updateSectionConfig,
   onBackHandler,
   onFinishHandler,
+  currentPage,
+  updateCurrentPage,
+  topicList,
 }: SectionConfigProps) {
-  return (
-    <>
-      <h1>{sectionConfig.section}</h1>
-      <div className="flex flex-row justify-between">
-        <button
-          type="button"
-          className="bg-gray-200 p-3 rounded-lg"
-          onClick={() => {
-            onBackHandler();
-          }}
-        >
-          Previous
-        </button>
-        <button
-          type="button"
-          className="bg-green-400 p-3 rounded-lg text-white"
-          onClick={() => {
+  if (currentPage === 0)
+    return (
+      <StepOne
+        sectionConfig={sectionConfig}
+        updateSectionConfig={updateSectionConfig}
+        onNextHandler={() => {
+          if (sectionConfig.style !== "normal")
+            updateCurrentPage(currentPage + 1);
+          else onFinishHandler();
+        }}
+        onPrevHandler={() => {
+          onBackHandler();
+        }}
+      />
+    );
+
+  if (currentPage === 1) {
+    if (sectionConfig.style === "specific")
+      return (
+        <StepTwoDistTopic
+          sectionName={sectionConfig.section}
+          topicList={topicList}
+          onNextHandler={() => {
             onFinishHandler();
           }}
-        >
-          Next
-        </button>
-      </div>
-    </>
-  );
+          onPrevHandler={() => {
+            updateCurrentPage(currentPage - 1);
+          }}
+        />
+      );
+
+    if (sectionConfig.style === "total") {
+      return (
+        <StepTwoTotal
+          onNextHandler={() => {
+            onFinishHandler();
+          }}
+          onPrevHandler={() => {
+            updateCurrentPage(currentPage - 1);
+          }}
+        />
+      );
+    }
+    return <div></div>;
+  }
+
+  return <div></div>;
 }

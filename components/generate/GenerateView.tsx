@@ -3,11 +3,16 @@ import { GenerateConfig } from "../../interfaces/GenerateConfig";
 import InitStep from "./InitStep";
 import SectionView from "./SectionView";
 
-export default function GenerateView() {
+interface GenerateViewProps {
+  topicList: Array<{ subtopic: string; section: string }>;
+}
+
+export default function GenerateView({ topicList }: GenerateViewProps) {
   const [pageNumber, setPageNumber] = useState<number>(0);
   const [generateConfig, setGenerateConfig] = useState<GenerateConfig>({
     sections: [],
   });
+  const [sectionPageNumber, setSectionPageNumber] = useState<number[]>([]);
 
   const nextPage = () => {
     setPageNumber((prev) => prev + 1);
@@ -30,6 +35,7 @@ export default function GenerateView() {
               diffDist: [],
             })),
           });
+          setSectionPageNumber(value.map(() => 0));
         }}
         onNextHandler={nextPage}
       />
@@ -49,6 +55,18 @@ export default function GenerateView() {
         }}
         onFinishHandler={nextPage}
         onBackHandler={prevPage}
+        currentPage={sectionPageNumber[pageNumber - 1]}
+        updateCurrentPage={(value) => {
+          const newData = [...sectionPageNumber];
+          newData[pageNumber - 1] = value;
+          setSectionPageNumber(newData);
+        }}
+        topicList={topicList
+          .filter(
+            ({ section }) =>
+              section === generateConfig.sections[pageNumber - 1].section
+          )
+          .map(({ subtopic }) => subtopic)}
       />
     );
   }

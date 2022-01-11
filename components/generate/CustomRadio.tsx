@@ -14,6 +14,7 @@ interface RadioItemProps {
 interface CustomRadioProps {
   name: string;
   options: RadioItemData[];
+  onChangeHandler: (value: string) => void;
 }
 
 function RadioItem({ id, name, value, option }: RadioItemProps) {
@@ -35,9 +36,18 @@ function RadioItem({ id, name, value, option }: RadioItemProps) {
   );
 }
 
-export default function CustomRadio({ name, options }: CustomRadioProps) {
+export default function CustomRadio({
+  name,
+  options,
+  onChangeHandler,
+}: CustomRadioProps) {
   return (
-    <fieldset className="p-3">
+    <fieldset
+      className="p-3"
+      onChange={(e) => {
+        onChangeHandler((e.target as any).value);
+      }}
+    >
       {options.map(({ id, value, option }) => (
         <RadioItem key={id} id={id} name={name} value={value} option={option} />
       ))}

@@ -1,29 +1,40 @@
 import DistributionView from "./DistributionView";
 
 interface StepThreeDistProps {
-  topicName: string;
+  sectionName: string;
   topicList: string[];
-  stepName: string;
+  onNextHandler: () => void;
+  onPrevHandler: () => void;
 }
 
 export default function StepThreeDistTopic({
-  topicName,
+  sectionName,
   topicList,
-  stepName,
+  onNextHandler,
+  onPrevHandler,
 }: StepThreeDistProps) {
   return (
     <>
       <h1 className="text-xl">
-        Step {stepName}: Specify distribution in topics for {topicName}
+        Step 2: Specify distribution in topics for {sectionName}
       </h1>
-      <DistributionView topicList={topicList} topicName={topicName} />
+      <DistributionView topicList={topicList} topicName={sectionName} />
       <div className="flex flex-row justify-between">
-        <button type="button" className="bg-gray-200 p-3 rounded-lg">
+        <button
+          type="button"
+          className="bg-gray-200 p-3 rounded-lg"
+          onClick={() => {
+            onPrevHandler();
+          }}
+        >
           Previous
         </button>
         <button
           type="button"
           className="bg-green-400 p-3 rounded-lg text-white"
+          onClick={() => {
+            onNextHandler();
+          }}
         >
           Next
         </button>
