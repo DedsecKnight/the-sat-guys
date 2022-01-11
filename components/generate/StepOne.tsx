@@ -42,6 +42,7 @@ export default function StepOne({
       </h1>
       <CustomRadio
         name="exam_style"
+        currentValue={sectionConfig.style}
         options={radioList}
         onChangeHandler={(value) => {
           updateSectionConfig({

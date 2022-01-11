@@ -1,47 +1,30 @@
-import { useState } from "react";
 import { StepCompleted } from "../../interfaces/StepCompleted";
+import { checkboxList } from "../../lib/generate";
 import { useNotificationContext } from "../context-api/NotificationContext";
-import CustomCheckbox, { CheckboxItemData } from "./CustomCheckbox";
+import CustomCheckbox from "./CustomCheckbox";
 
 interface InitStepProps {
+  checkedSection: Array<{
+    section: string;
+    checked: boolean;
+  }>;
+  updateCheckedSection: (
+    value: Array<{
+      section: string;
+      checked: boolean;
+    }>
+  ) => void;
   updateSectionList: (value: string[]) => void;
   onNextHandler: () => void;
 }
 
-const checkboxList: CheckboxItemData[] = [
-  {
-    id: "reading",
-    value: "reading",
-    option: "Reading",
-  },
-  {
-    id: "writing",
-    value: "writing",
-    option: "Writing",
-  },
-  {
-    id: "math_cal",
-    value: "cal",
-    option: "Math (with Calculator)",
-  },
-  {
-    id: "math_no_cal",
-    value: "no_cal",
-    option: "Math (no Calculator)",
-  },
-];
-
 export default function InitStep({
   updateSectionList,
   onNextHandler,
+  checkedSection,
+  updateCheckedSection,
 }: InitStepProps) {
   const { updateNotificationlist } = useNotificationContext();
-  const [checkedSection, setCheckedSection] = useState(
-    checkboxList.map(({ value }) => ({
-      section: value,
-      checked: false,
-    }))
-  );
 
   const stepCompleted = (): StepCompleted => {
     const errors = [];
@@ -63,8 +46,8 @@ export default function InitStep({
         options={checkboxList}
         checkedState={checkedSection.map(({ checked }) => checked)}
         updateCheckedState={(value) => {
-          setCheckedSection((prev) =>
-            prev.map((obj, idx) => ({
+          updateCheckedSection(
+            checkedSection.map((obj, idx) => ({
               ...obj,
               checked: value[idx],
             }))

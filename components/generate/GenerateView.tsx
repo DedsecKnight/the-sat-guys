@@ -4,6 +4,7 @@ import StepThree from "./StepThree";
 import InitStep from "./InitStep";
 import SectionView from "./SectionView";
 import StepFour from "./StepFour";
+import { checkboxList } from "../../lib/generate";
 
 interface GenerateViewProps {
   topicList: Array<{ subtopic: string; section: string }>;
@@ -19,6 +20,12 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
     })),
   });
   const [sectionPageNumber, setSectionPageNumber] = useState<number[]>([]);
+  const [checkedSection, setCheckedSection] = useState(
+    checkboxList.map(({ value }) => ({
+      section: value,
+      checked: false,
+    }))
+  );
 
   const nextPage = () => {
     setPageNumber((prev) => prev + 1);
@@ -49,6 +56,10 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
           setSectionPageNumber(value.map(() => 0));
         }}
         onNextHandler={nextPage}
+        checkedSection={checkedSection}
+        updateCheckedSection={(value) => {
+          setCheckedSection(value);
+        }}
       />
     );
   }
