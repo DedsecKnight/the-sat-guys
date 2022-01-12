@@ -35,7 +35,7 @@ function RadioItem({
         type="radio"
         name={name}
         value={value}
-        className="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-green-300"
+        className="h-4 border-gray-300 focus:ring-2 focus:ring-green-300"
         aria-labelledby={id}
         aria-describedby={id}
         checked={value === currentValue}
