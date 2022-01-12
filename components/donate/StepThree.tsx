@@ -1,5 +1,9 @@
 import { useEffect } from "react";
-import { QuestionConfig } from "../../interfaces/QuestionConfig";
+import {
+  QuestionConfig,
+  SubmitQuestionConfig,
+} from "../../interfaces/QuestionConfig";
+import { convertFileToBase64 } from "../../lib/convert-base64";
 import { RequestHelper } from "../../lib/request-helper";
 import { useLoadingContext } from "../context-api/LoadingContext";
 import { useNotificationContext } from "../context-api/NotificationContext";
@@ -25,11 +29,36 @@ export default function StepThree({
     emptyNotificationList();
   }, []);
 
+  const processConfig = async (questionConfig: QuestionConfig) => {
+    const submitConfig: SubmitQuestionConfig = {
+      ...questionConfig,
+      question: {
+        question: questionConfig.question.question,
+        image: "",
+      },
+      answers: [],
+    };
+    submitConfig.question.image = await convertFileToBase64(
+      questionConfig.question.image
+    );
+    for (let answer of questionConfig.answers) {
+      const newAnswer: typeof submitConfig.answers[0] = {
+        ...answer,
+        image: "",
+      };
+      newAnswer.image = await convertFileToBase64(answer.image);
+      submitConfig.answers.push(newAnswer);
+    }
+    return submitConfig;
+  };
+
   const submitQuestion = async () => {
+    const submitConfig = await processConfig(questionConfig);
+
     return RequestHelper.post<
       {
         action: string;
-        questionConfig: QuestionConfig;
+        questionConfig: SubmitQuestionConfig;
       },
       string
     >(
@@ -37,7 +66,7 @@ export default function StepThree({
       { "Content-Type": "application/json" },
       {
         action: "donate",
-        questionConfig,
+        questionConfig: submitConfig,
       }
     );
   };
@@ -75,6 +104,8 @@ export default function StepThree({
                 toggleLoading();
                 if (status) {
                   onNextHandler();
+                } else {
+                  console.log(data);
                 }
               } catch (error) {
                 updateNotificationlist([
