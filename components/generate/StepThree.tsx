@@ -1,50 +1,57 @@
-import CustomRadio from "./CustomRadio";
-import { SectionConfig } from "../../interfaces/GenerateConfig";
-import { strategyList } from "../../lib/generate";
+import { DistItem } from "../../interfaces/GenerateConfig";
 import { StepCompleted } from "../../interfaces/StepCompleted";
 import { useNotificationContext } from "../context-api/NotificationContext";
 
-interface StepOneProps {
-  sectionConfig: SectionConfig;
-  updateSectionConfig: (value: SectionConfig) => void;
+interface StepThreeProps {
+  getTotalQuestion: () => number;
+  difficulties: DistItem[];
   onNextHandler: () => void;
   onPrevHandler: () => void;
+  updateDistItem: (idx: number, value: number) => void;
 }
 
-export default function StepOne({
-  sectionConfig,
-  updateSectionConfig,
+export default function StepThree({
+  getTotalQuestion,
+  difficulties,
   onNextHandler,
   onPrevHandler,
-}: StepOneProps) {
+  updateDistItem,
+}: StepThreeProps) {
   const { updateNotificationlist } = useNotificationContext();
 
   const stepCompleted = (): StepCompleted => {
-    const errors: string[] = [];
-    if (sectionConfig.style === "") {
-      errors.push("Please specify an option");
+    const errors = [];
+    let currTotalQuestions = 0;
+    const expectedTotalQuestion = getTotalQuestion();
+    for (let { count } of difficulties) {
+      currTotalQuestions += count;
+    }
+    if (currTotalQuestions !== expectedTotalQuestion) {
+      errors.push(
+        `Total number of questions do not match. Expected ${expectedTotalQuestion}, found ${currTotalQuestions}`
+      );
     }
     return {
       status: errors.length === 0,
       msg: errors,
     };
   };
+
   return (
     <>
-      <h1 className="text-xl">
-        Step 1: Choose your exam style for {sectionConfig.section}
-      </h1>
-      <CustomRadio
-        name="exam_style"
-        currentValue={sectionConfig.style}
-        options={strategyList}
-        onChangeHandler={(value) => {
-          updateSectionConfig({
-            ...sectionConfig,
-            style: value,
-          });
-        }}
-      />
+      <h1 className="text-xl">Step 4: Specify distribution in difficulty</h1>
+      {difficulties.map(({ value: difficulty, count }, idx) => (
+        <input
+          key={idx}
+          type="number"
+          className="rounded-lg p-3 border-2"
+          placeholder={`Enter number of ${difficulty} questions`}
+          value={count}
+          onChange={(e) => {
+            updateDistItem(idx, parseInt(e.target.value) || 0);
+          }}
+        />
+      ))}
       <div className="flex flex-row justify-between">
         <button
           type="button"

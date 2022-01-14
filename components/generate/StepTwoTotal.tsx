@@ -1,49 +1,43 @@
-import CustomRadio from "./CustomRadio";
-import { SectionConfig } from "../../interfaces/GenerateConfig";
-import { strategyList } from "../../lib/generate";
 import { StepCompleted } from "../../interfaces/StepCompleted";
 import { useNotificationContext } from "../context-api/NotificationContext";
 
-interface StepOneProps {
-  sectionConfig: SectionConfig;
-  updateSectionConfig: (value: SectionConfig) => void;
+interface StepTwoTotalProps {
+  totalQuestion: number;
+  updateTotalQuestion: (value: number) => void;
   onNextHandler: () => void;
   onPrevHandler: () => void;
 }
 
-export default function StepOne({
-  sectionConfig,
-  updateSectionConfig,
+export default function StepTwoTotal({
   onNextHandler,
   onPrevHandler,
-}: StepOneProps) {
+  totalQuestion,
+  updateTotalQuestion,
+}: StepTwoTotalProps) {
   const { updateNotificationlist } = useNotificationContext();
 
   const stepCompleted = (): StepCompleted => {
-    const errors: string[] = [];
-    if (sectionConfig.style === "") {
-      errors.push("Please specify an option");
+    const errors = [];
+    if (totalQuestion <= 0) {
+      errors.push("At least 1 question is required");
     }
     return {
       status: errors.length === 0,
       msg: errors,
     };
   };
+
   return (
     <>
-      <h1 className="text-xl">
-        Step 1: Choose your exam style for {sectionConfig.section}
-      </h1>
-      <CustomRadio
-        name="exam_style"
-        currentValue={sectionConfig.style}
-        options={strategyList}
-        onChangeHandler={(value) => {
-          updateSectionConfig({
-            ...sectionConfig,
-            style: value,
-          });
+      <h1 className="text-xl">Step 3: Specify the number of questions</h1>
+      <input
+        type="number"
+        value={totalQuestion}
+        onChange={(e) => {
+          updateTotalQuestion(parseInt(e.target.value) || 0);
         }}
+        className="w-full rounded-xl p-2 border-2"
+        placeholder="Enter number of questions"
       />
       <div className="flex flex-row justify-between">
         <button

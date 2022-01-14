@@ -1,48 +1,50 @@
-import CustomRadio from "./CustomRadio";
-import { SectionConfig } from "../../interfaces/GenerateConfig";
-import { strategyList } from "../../lib/generate";
+import { DistItem } from "../../interfaces/GenerateConfig";
 import { StepCompleted } from "../../interfaces/StepCompleted";
 import { useNotificationContext } from "../context-api/NotificationContext";
+import DistributionView from "./DistributionView";
 
-interface StepOneProps {
-  sectionConfig: SectionConfig;
-  updateSectionConfig: (value: SectionConfig) => void;
+interface StepTwoDistProps {
+  sectionName: string;
+  topicList: DistItem[];
   onNextHandler: () => void;
   onPrevHandler: () => void;
+  updateTopicList: (value: DistItem[]) => void;
 }
 
-export default function StepOne({
-  sectionConfig,
-  updateSectionConfig,
+export default function StepTwoDistTopic({
+  sectionName,
+  topicList,
   onNextHandler,
   onPrevHandler,
-}: StepOneProps) {
+  updateTopicList,
+}: StepTwoDistProps) {
   const { updateNotificationlist } = useNotificationContext();
-
   const stepCompleted = (): StepCompleted => {
-    const errors: string[] = [];
-    if (sectionConfig.style === "") {
-      errors.push("Please specify an option");
+    const errors = [];
+    let currTotalQuestions = 0;
+    for (let topic of topicList) {
+      currTotalQuestions += topic.count;
+    }
+    if (currTotalQuestions <= 0) {
+      errors.push("At least 1 question is required");
     }
     return {
       status: errors.length === 0,
       msg: errors,
     };
   };
+
   return (
     <>
       <h1 className="text-xl">
-        Step 1: Choose your exam style for {sectionConfig.section}
+        Step 2: Specify distribution in topics for {sectionName}
       </h1>
-      <CustomRadio
-        name="exam_style"
-        currentValue={sectionConfig.style}
-        options={strategyList}
-        onChangeHandler={(value) => {
-          updateSectionConfig({
-            ...sectionConfig,
-            style: value,
-          });
+      <DistributionView
+        topicList={topicList}
+        updateTopicItem={(idx, value) => {
+          const newTopicList = topicList.map((obj) => ({ ...obj }));
+          newTopicList[idx].count = value;
+          updateTopicList(newTopicList);
         }}
       />
       <div className="flex flex-row justify-between">
