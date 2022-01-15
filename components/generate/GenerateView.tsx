@@ -39,6 +39,18 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
     setPageNumber((prev) => prev - 1);
   };
 
+  const generateTopicDist = (section: string): Record<string, number> => {
+    return topicList
+      .filter((obj) => obj.section === section)
+      .reduce(
+        (acc, curr) => ({
+          ...acc,
+          [curr.subtopic]: 0,
+        }),
+        {} as Record<string, number>
+      );
+  };
+
   if (pageNumber === 0) {
     return (
       <InitStep
@@ -49,15 +61,7 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
               section,
               style: "",
               totalQuestion: 0,
-              topicDist: topicList
-                .filter((obj) => obj.section === section)
-                .reduce(
-                  (acc, curr) => ({
-                    ...acc,
-                    [curr.subtopic]: 0,
-                  }),
-                  {} as Record<string, number>
-                ),
+              topicDist: {},
             })),
           });
           setSectionPageNumber(value.map(() => 0));
@@ -81,6 +85,18 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
           setGenerateConfig({
             ...generateConfig,
             sections: newConfig,
+          });
+        }}
+        initializeTopicDist={() => {
+          setGenerateConfig({
+            ...generateConfig,
+            sections: generateConfig.sections.map((section, idx) => {
+              if (idx != pageNumber - 1) return section;
+              return {
+                ...section,
+                topicDist: generateTopicDist(section.section),
+              };
+            }),
           });
         }}
         onFinishHandler={nextPage}
