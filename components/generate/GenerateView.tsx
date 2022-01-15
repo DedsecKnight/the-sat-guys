@@ -15,10 +15,13 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
   const [pageNumber, setPageNumber] = useState<number>(0);
   const [generateConfig, setGenerateConfig] = useState<GenerateConfig>({
     sections: [],
-    diffDist: diffList.map((diff) => ({
-      value: diff,
-      count: 0,
-    })),
+    diffDist: diffList.reduce(
+      (acc, curr) => ({
+        ...acc,
+        [curr]: 0,
+      }),
+      {} as Record<string, number>
+    ),
   });
   const [sectionPageNumber, setSectionPageNumber] = useState<number[]>([]);
   const [checkedSection, setCheckedSection] = useState(
@@ -95,11 +98,11 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
         difficulties={generateConfig.diffDist}
         onNextHandler={nextPage}
         onPrevHandler={prevPage}
-        updateDistItem={(idx, value) => {
-          const newDiffDist = generateConfig.diffDist.map((obj) => ({
-            ...obj,
-          }));
-          newDiffDist[idx].count = value;
+        updateDistItem={(key, value) => {
+          const newDiffDist = {
+            ...generateConfig.diffDist,
+            [key]: value,
+          };
           setGenerateConfig({
             ...generateConfig,
             diffDist: newDiffDist,

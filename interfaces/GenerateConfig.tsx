@@ -1,6 +1,6 @@
 export interface GenerateConfig {
   sections: SectionConfig[];
-  diffDist: DistItem[];
+  diffDist: Record<string, number>;
 }
 
 export interface DistItem {

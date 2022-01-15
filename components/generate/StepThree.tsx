@@ -4,10 +4,10 @@ import { useNotificationContext } from "../context-api/NotificationContext";
 
 interface StepThreeProps {
   getTotalQuestion: () => number;
-  difficulties: DistItem[];
+  difficulties: Record<string, number>;
   onNextHandler: () => void;
   onPrevHandler: () => void;
-  updateDistItem: (idx: number, value: number) => void;
+  updateDistItem: (key: string, value: number) => void;
 }
 
 export default function StepThree({
@@ -21,11 +21,11 @@ export default function StepThree({
 
   const stepCompleted = (): StepCompleted => {
     const errors = [];
-    let currTotalQuestions = 0;
+    let currTotalQuestions = Object.values(difficulties).reduce(
+      (acc, curr) => acc + curr,
+      0
+    );
     const expectedTotalQuestion = getTotalQuestion();
-    for (let { count } of difficulties) {
-      currTotalQuestions += count;
-    }
     if (currTotalQuestions !== expectedTotalQuestion) {
       errors.push(
         `Total number of questions do not match. Expected ${expectedTotalQuestion}, found ${currTotalQuestions}`
@@ -40,15 +40,15 @@ export default function StepThree({
   return (
     <>
       <h1 className="text-xl">Step 4: Specify distribution in difficulty</h1>
-      {difficulties.map(({ value: difficulty, count }, idx) => (
+      {Object.entries(difficulties).map(([difficulty, count]) => (
         <input
-          key={idx}
+          key={difficulty}
           type="number"
           className="rounded-lg p-3 border-2"
           placeholder={`Enter number of ${difficulty} questions`}
           value={count}
           onChange={(e) => {
-            updateDistItem(idx, parseInt(e.target.value) || 0);
+            updateDistItem(difficulty, parseInt(e.target.value) || 0);
           }}
         />
       ))}
