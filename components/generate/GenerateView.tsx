@@ -138,7 +138,15 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
   }
 
   if (pageNumber - generateConfig.sections.length === 3) {
-    return <StepFive generateConfig={generateConfig} />;
+    return (
+      <StepFive
+        onNextHandler={() => {
+          // TODO: Either generate PDF of the exam or redirect to exam page
+          console.log(generateConfig);
+        }}
+        onPrevHandler={prevPage}
+      />
+    );
   }
 
   return <div></div>;
