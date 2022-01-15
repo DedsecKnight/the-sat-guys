@@ -3,14 +3,9 @@ export interface GenerateConfig {
   diffDist: Record<string, number>;
 }
 
-export interface DistItem {
-  value: string;
-  count: number;
-}
-
 export interface SectionConfig {
   section: string;
   style: string;
   totalQuestion: number;
-  topicDist: DistItem[];
+  topicDist: Record<string, number>;
 }

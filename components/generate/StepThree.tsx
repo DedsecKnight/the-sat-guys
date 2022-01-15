@@ -1,4 +1,3 @@
-import { DistItem } from "../../interfaces/GenerateConfig";
 import { StepCompleted } from "../../interfaces/StepCompleted";
 import { useNotificationContext } from "../context-api/NotificationContext";
 

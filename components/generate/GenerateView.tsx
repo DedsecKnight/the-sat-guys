@@ -51,10 +51,13 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
               totalQuestion: 0,
               topicDist: topicList
                 .filter((obj) => obj.section === section)
-                .map(({ subtopic }) => ({
-                  value: subtopic,
-                  count: 0,
-                })),
+                .reduce(
+                  (acc, curr) => ({
+                    ...acc,
+                    [curr.subtopic]: 0,
+                  }),
+                  {} as Record<string, number>
+                ),
             })),
           });
           setSectionPageNumber(value.map(() => 0));
@@ -109,19 +112,21 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
           });
         }}
         getTotalQuestion={() => {
-          let totalQuestions = 0;
-          for (let section of generateConfig.sections) {
+          return generateConfig.sections.reduce((acc, section) => {
             if (section.style === "specific") {
-              for (let { count } of section.topicDist) {
-                totalQuestions += count;
-              }
-            } else if (section.style === "total") {
-              totalQuestions += section.totalQuestion;
-            } else {
-              totalQuestions += 57;
+              return (
+                acc +
+                Object.values(section.topicDist).reduce(
+                  (acc, curr) => acc + curr,
+                  0
+                )
+              );
             }
-          }
-          return totalQuestions;
+            if (section.style === "total") {
+              return acc + section.totalQuestion;
+            }
+            return acc + 57;
+          }, 0);
         }}
       />
     );

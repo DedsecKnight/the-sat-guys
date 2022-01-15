@@ -11,9 +11,9 @@ export default function SectionCard({ section }: SectionCardProps) {
       <h1 className="text-lg">Exam Style: {section.style}</h1>
       {section.style === "specific" ? (
         <div className="p-3 flex flex-col">
-          {section.topicDist
-            .filter(({ count }) => count > 0)
-            .map(({ value, count }) => (
+          {Object.entries(section.topicDist)
+            .filter(([_, count]) => count > 0)
+            .map(([value, count]) => (
               <h1 key={value} className="text-md">
                 {value}: {count}
               </h1>
