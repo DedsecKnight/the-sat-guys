@@ -1,6 +1,7 @@
 import logo from "../../public/clover-full.jpg";
 import Image from "next/image";
 import NavItem from "./NavItem";
+import { signOut } from "next-auth/react";
 
 interface Props {
   currPage: string;
@@ -140,19 +141,21 @@ const Navbar: React.FC<Props> = ({ currPage }) => {
       </div>
 
       <div className="p-3 flex flex-col">
-        <NavItem
-          active={false}
-          icon={
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-            />
-          }
-          redirect=""
-          title="Logout"
-        />
+        <button onClick={() => signOut()}>
+          <NavItem
+            active={false}
+            icon={
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            }
+            redirect=""
+            title="Logout"
+          />
+        </button>
       </div>
     </div>
   );
