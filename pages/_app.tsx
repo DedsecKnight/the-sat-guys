@@ -8,6 +8,7 @@ import NotificationList from "../components/utilities/NotificationList";
 import { LoadingContextProvider } from "../components/context-api/LoadingContext";
 import { SessionProvider } from "next-auth/react";
 import AuthWrapper from "../components/utilities/AuthWrapper";
+import ProfileHeader from "../components/utilities/ProfileHeader";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
@@ -21,9 +22,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
                   <Hamburger />
                   <SearchBar />
                 </div>
-                <div>
-                  <h1 className="text-xl font-semibold">Admin</h1>
-                </div>
+                <ProfileHeader />
               </div>
               <NotificationList />
               <Component {...pageProps} />

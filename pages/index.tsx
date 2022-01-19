@@ -11,10 +11,11 @@ export default function HomePage() {
   }, []);
   const { data: session } = useSession();
   if (!session) return <div></div>;
+
   return (
     <div className="my-10">
       <h1 className="text-3xl font-bold">
-        Welcome, {session.user ? session.user.email : "user"}
+        Welcome, {session.user ? session.user.name : "user"}
       </h1>
       <RecentExam />
       <RecentDonation />

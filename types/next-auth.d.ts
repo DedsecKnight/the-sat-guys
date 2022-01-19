@@ -6,11 +6,26 @@ declare module "next-auth/jwt" {
     refreshToken?: string;
     accessToken?: string;
     idToken?: string;
+    role?: string;
   }
 }
 
 declare module "next-auth" {
   interface Session {
     token: JWT;
+    user:
+      | {
+          name?: string | null | undefined;
+          email?: string | null | undefined;
+          image?: string | null | undefined;
+          id?: string | null | undefined;
+          role?: string | null | undefined;
+        }
+      | undefined;
+  }
+
+  interface User {
+    role: string;
+    id: string;
   }
 }
