@@ -9,8 +9,6 @@ const sequelize = new Sequelize({
   database: process.env.DB_NAME!,
 });
 
-sequelize.sync();
-
 export default SequelizeAdapter(sequelize, {
   models: {
     User: sequelize.define("user", {
