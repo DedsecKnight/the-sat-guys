@@ -14,7 +14,7 @@ const PageWrapper: React.FC<Props> = ({ currPage, children, pageTitle }) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <Navbar currPage={currPage} />
-      <div className="p-6 w-full">{children}</div>
+      <div className="p-6 w-full relative">{children}</div>
     </div>
   );
 };
