@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useNavContext } from "../components/context-api/NavContext";
 import RecentDonation from "../components/dashboard/RecentDonation";
@@ -8,10 +9,14 @@ export default function HomePage() {
   useEffect(() => {
     updateEndpoint("/", "Dashboard");
   }, []);
+  const { data: session } = useSession();
+  if (!session) return <div></div>;
 
   return (
     <div className="my-10">
-      <h1 className="text-3xl font-bold">Welcome, Admin</h1>
+      <h1 className="text-3xl font-bold">
+        Welcome, {session.user ? session.user.name : "user"}
+      </h1>
       <RecentExam />
       <RecentDonation />
     </div>
