@@ -1,4 +1,10 @@
-export default function ThankYou() {
+import Link from "next/link";
+
+interface ThankYouProps {
+  onDonateAnother: () => void;
+}
+
+export default function ThankYou({ onDonateAnother }: ThankYouProps) {
   return (
     <>
       <div className="mx-auto my-10 rounded-xl p-6 w-full">
@@ -10,13 +16,24 @@ export default function ThankYou() {
           you shortly about your approval status.
         </h1>
       </div>
-      <div className="flex flex-row justify-end">
+      <div className="flex flex-row gap-x-2 justify-end">
         <button
           type="button"
           className="rounded-lg bg-green-400 p-3 text-white"
+          onClick={() => {
+            onDonateAnother();
+          }}
         >
-          Back To Dashboard
+          Donate another question
         </button>
+        <Link href="/">
+          <button
+            type="button"
+            className="rounded-lg bg-green-400 p-3 text-white"
+          >
+            Back To Dashboard
+          </button>
+        </Link>
       </div>
     </>
   );

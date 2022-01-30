@@ -1,21 +1,32 @@
-interface CustomSelectProps {
+import { ChangeEvent } from "react";
+
+export interface CustomOptionItemProps {
+  value: string;
+  option: string;
+}
+export interface CustomSelectProps {
   name: string;
-  defaultValue: string;
+  value: string;
   defaultOption: string;
-  options: Array<{ value: string; option: string }>;
+  options: Array<CustomOptionItemProps>;
+  onChangeHandler: (e: ChangeEvent<HTMLSelectElement>) => void;
 }
 
 export default function CustomSelect({
   name,
-  defaultValue,
+  value,
   defaultOption,
   options,
+  onChangeHandler,
 }: CustomSelectProps) {
   return (
     <select
       name={name}
-      defaultValue={defaultValue}
+      value={value}
       className="border-2 w-full rounded-xl p-3"
+      onChange={(e) => {
+        onChangeHandler(e);
+      }}
     >
       <option value="" disabled>
         {defaultOption}

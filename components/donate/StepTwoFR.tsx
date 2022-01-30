@@ -1,18 +1,117 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { useNavContext } from "../context-api/NavContext";
 import FRColView from "./FRColView";
 import FRRowView from "./FRRowView";
-import InputWithImage from "./InputWithImage";
+import { QuestionConfig } from "../../interfaces/QuestionConfig";
+import { StepCompleted } from "../../interfaces/StepCompleted";
+import { useNotificationContext } from "../context-api/NotificationContext";
 
-export default function StepTwoFR() {
-  const [correctAnswers, setCorrectAnswers] = useState<string[]>([""]);
+interface StepTwoFRProps {
+  questionConfig: QuestionConfig;
+  onNextHandler: () => void;
+  onPrevHandler: () => void;
+  setQuestionConfig: (value: QuestionConfig) => void;
+  isCondition: boolean;
+  updateIsCondition: (value: boolean) => void;
+}
+
+export default function StepTwoFR({
+  questionConfig,
+  onNextHandler,
+  onPrevHandler,
+  setQuestionConfig,
+  isCondition,
+  updateIsCondition,
+}: StepTwoFRProps) {
   const { showNavBar } = useNavContext();
+  const { updateNotificationlist, emptyNotificationList } =
+    useNotificationContext();
 
   const deleteAnswer = (idx: number) => {
-    const newCorrect = [...correctAnswers];
+    const newCorrect = [...questionConfig.answers];
     newCorrect.splice(idx, 1);
-    setCorrectAnswers(newCorrect);
+    const newQuestionConfig: QuestionConfig = {
+      ...questionConfig,
+      answers: newCorrect,
+    };
+    setQuestionConfig(newQuestionConfig);
   };
+
+  const addAnswer = () => {
+    setQuestionConfig({
+      ...questionConfig,
+      answers: [
+        ...questionConfig.answers,
+        { answer: "", isCorrect: true, image: null, isCondition },
+      ],
+    });
+  };
+
+  const updateAnswer = (idx: number, value: string) => {
+    const newAnswers = [...questionConfig.answers];
+    newAnswers[idx].answer = value;
+    setQuestionConfig({
+      ...questionConfig,
+      answers: newAnswers,
+    });
+  };
+
+  const resetData = () => {
+    setQuestionConfig({
+      ...questionConfig,
+      question: {
+        question: "",
+        image: null,
+      },
+      answers: [],
+    });
+  };
+
+  const stepCompleted = (): StepCompleted => {
+    const errors: string[] = [];
+    if (
+      questionConfig.question.question === "" &&
+      questionConfig.question.image === null
+    ) {
+      errors.push("Question must have either a statement or an image");
+    }
+
+    if (questionConfig.answers.length === 0) {
+      errors.push("There must be at least 1 answer");
+    }
+
+    if (questionConfig.question.image?.type.indexOf("image") === -1) {
+      errors.push("Uploaded file must be an image");
+    }
+
+    if (
+      questionConfig.answers.filter(
+        ({ answer, image }) => answer.length === 0 && image === null
+      ).length > 0
+    ) {
+      errors.push("Answer must either be a statement or an image");
+    }
+
+    if (
+      questionConfig.answers.filter(
+        ({ image }) => image && image.type.indexOf("image") === -1
+      ).length > 0
+    ) {
+      errors.push("Uploaded file must be an image");
+    }
+
+    return {
+      status: errors.length === 0,
+      msg: errors,
+    };
+  };
+
+  useEffect(() => {
+    emptyNotificationList();
+    if (questionConfig.answers.length === 0) {
+      addAnswer();
+    }
+  }, []);
 
   return (
     <>
@@ -22,24 +121,47 @@ export default function StepTwoFR() {
       </div>
       {showNavBar ? (
         <FRRowView
-          correctAnswers={correctAnswers}
+          questionConfig={questionConfig}
+          setQuestionConfig={(value) => {
+            setQuestionConfig(value);
+          }}
           deleteAnswer={deleteAnswer}
+          updateAnswer={updateAnswer}
+          isCondition={isCondition}
+          updateIsCondition={(value) => {
+            updateIsCondition(value);
+          }}
         />
       ) : (
         <FRColView
-          correctAnswers={correctAnswers}
+          questionConfig={questionConfig}
+          setQuestionConfig={(value) => {
+            setQuestionConfig(value);
+          }}
           deleteAnswer={deleteAnswer}
+          updateAnswer={updateAnswer}
+          isCondition={isCondition}
+          updateIsCondition={(value) => {
+            updateIsCondition(value);
+          }}
         />
       )}
       <div className="flex flex-row justify-between">
-        <button type="button" className="bg-gray-200 p-3 rounded-lg">
+        <button
+          type="button"
+          className="bg-gray-200 p-3 rounded-lg"
+          onClick={() => {
+            resetData();
+            onPrevHandler();
+          }}
+        >
           Previous
         </button>
         <div className="flex flex-row gap-x-2">
           <button
             type="button"
             onClick={() => {
-              setCorrectAnswers((prev) => [...prev, ""]);
+              addAnswer();
             }}
             className="bg-green-400 p-3 rounded-lg text-white"
           >
@@ -48,6 +170,19 @@ export default function StepTwoFR() {
           <button
             type="button"
             className="bg-green-400 p-3 rounded-lg text-white"
+            onClick={() => {
+              const completed = stepCompleted();
+              if (completed.status) {
+                onNextHandler();
+                return;
+              }
+              updateNotificationlist(
+                completed.msg.map((message) => ({
+                  type: "error",
+                  msg: message,
+                }))
+              );
+            }}
           >
             Next
           </button>
