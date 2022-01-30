@@ -1,6 +1,6 @@
-import SequelizeAdapter from "../../../lib/adapters/sequelize";
 import NextAuth from "next-auth";
 import CognitoProvider from "next-auth/providers/cognito";
+import SequelizeAdapter from "../../../lib/adapters/sequelize";
 
 export default NextAuth({
   providers: [
@@ -48,6 +48,5 @@ export default NextAuth({
   },
   session: {
     strategy: "jwt",
-    maxAge: 60 * 60,
   },
 });
