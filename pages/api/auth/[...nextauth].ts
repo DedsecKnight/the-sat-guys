@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import CognitoProvider from "next-auth/providers/cognito";
-import SequelizeAdapter from "../../../lib/adapters/sequelize";
+// import SequelizeAdapter from "../../../lib/adapters/sequelize";
 
 export default NextAuth({
   providers: [
@@ -12,7 +12,7 @@ export default NextAuth({
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
-  adapter: SequelizeAdapter,
+  // adapter: SequelizeAdapter,
   callbacks: {
     async jwt({ token, account, user }) {
       if (account?.access_token) {
