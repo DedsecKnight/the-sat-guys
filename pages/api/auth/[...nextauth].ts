@@ -1,5 +1,7 @@
 import NextAuth from "next-auth";
 import CognitoProvider from "next-auth/providers/cognito";
+import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter";
+import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 
 export default NextAuth({
   providers: [
@@ -11,6 +13,14 @@ export default NextAuth({
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
+  adapter: TypeORMLegacyAdapter({
+    type: "mysql",
+    host: process.env.DB_HOST,
+    username: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
+    namingStrategy: new SnakeNamingStrategy(),
+  }),
   callbacks: {
     async jwt({ token, account, user }) {
       if (account?.access_token) {
