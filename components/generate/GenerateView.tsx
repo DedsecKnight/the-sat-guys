@@ -6,6 +6,7 @@ import SectionView from "./SectionView";
 import StepFour from "./StepFour";
 import { diffList, sectionList } from "../../lib/generate";
 import StepFive from "./StepFive";
+import { useSession } from "next-auth/react";
 
 interface GenerateViewProps {
   topicList: Array<{ subtopic: string; section: string }>;
@@ -13,7 +14,9 @@ interface GenerateViewProps {
 
 export default function GenerateView({ topicList }: GenerateViewProps) {
   const [pageNumber, setPageNumber] = useState<number>(0);
+  const { data: session } = useSession();
   const [generateConfig, setGenerateConfig] = useState<GenerateConfig>({
+    user_id: session!.user!.id!,
     sections: [],
     diffDist: diffList.reduce(
       (acc, curr) => ({
