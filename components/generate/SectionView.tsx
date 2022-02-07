@@ -10,7 +10,7 @@ interface SectionConfigProps {
   onBackHandler: () => void;
   currentPage: number;
   updateCurrentPage: (value: number) => void;
-  initializeTopicDist: () => void;
+  initializeTopicDist: (style: string) => void;
 }
 
 export default function SectionView({
@@ -36,7 +36,7 @@ export default function SectionView({
         sectionConfig={sectionConfig}
         updateSectionConfig={updateSectionConfig}
         onNextHandler={() => {
-          if (sectionConfig.style === "specific") initializeTopicDist();
+          initializeTopicDist(sectionConfig.style);
           if (sectionConfig.style !== "normal") nextPage();
           else onFinishHandler();
         }}

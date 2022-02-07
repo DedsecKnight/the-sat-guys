@@ -39,13 +39,16 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
     setPageNumber((prev) => prev - 1);
   };
 
-  const generateTopicDist = (section: string): Record<string, number> => {
+  const generateTopicDist = (
+    section: string,
+    style: string
+  ): Record<string, number> => {
     return topicList
       .filter((obj) => obj.section === section)
       .reduce(
         (acc, curr) => ({
           ...acc,
-          [curr.subtopic]: 0,
+          [curr.subtopic]: style === "specific" ? 0 : 9999,
         }),
         {} as Record<string, number>
       );
@@ -87,14 +90,14 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
             sections: newConfig,
           });
         }}
-        initializeTopicDist={() => {
+        initializeTopicDist={(style: string) => {
           setGenerateConfig({
             ...generateConfig,
             sections: generateConfig.sections.map((section, idx) => {
               if (idx != pageNumber - 1) return section;
               return {
                 ...section,
-                topicDist: generateTopicDist(section.section),
+                topicDist: generateTopicDist(section.section, style),
               };
             }),
           });
