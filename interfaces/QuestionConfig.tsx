@@ -13,6 +13,7 @@ export interface QuestionConfig {
     image: File | null;
     isCondition: boolean;
   }>;
+  author_id: string;
 }
 
 export interface SubmitQuestionConfig {
@@ -30,4 +31,5 @@ export interface SubmitQuestionConfig {
     image: string | ArrayBuffer;
     isCondition: boolean;
   }>;
+  author_id: string;
 }

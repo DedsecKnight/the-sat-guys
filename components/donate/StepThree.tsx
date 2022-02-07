@@ -55,20 +55,29 @@ export default function StepThree({
   const submitQuestion = async () => {
     const submitConfig = await processConfig(questionConfig);
 
-    return RequestHelper.post<
-      {
-        action: string;
-        questionConfig: SubmitQuestionConfig;
-      },
-      string
-    >(
-      "/api/donate",
-      { "Content-Type": "application/json" },
-      {
-        action: "donate",
-        questionConfig: submitConfig,
-      }
-    );
+    try {
+      const res = await RequestHelper.post<
+        {
+          action: string;
+          questionConfig: SubmitQuestionConfig;
+        },
+        string
+      >(
+        "/api/donate",
+        { "Content-Type": "application/json" },
+        {
+          action: "donate",
+          questionConfig: submitConfig,
+        }
+      );
+      return res;
+    } catch (error) {
+      console.error(error);
+      return {
+        status: false,
+        data: "",
+      };
+    }
   };
 
   return (

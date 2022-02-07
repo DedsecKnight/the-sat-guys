@@ -5,6 +5,7 @@ import StepTwoMC from "./StepTwoMC";
 import StepTwoFR from "./StepTwoFR";
 import StepThree from "./StepThree";
 import ThankYou from "./ThankYou";
+import { useSession } from "next-auth/react";
 
 interface DonateViewProps {
   topicList: Array<{
@@ -15,6 +16,7 @@ interface DonateViewProps {
 
 export default function DonateView({ topicList }: DonateViewProps) {
   const [pageNumber, setPageNumber] = useState<number>(0);
+  const { data: session } = useSession();
   const [questionConfig, setQuestionConfig] = useState<QuestionConfig>({
     topic: "",
     section: "",
@@ -25,6 +27,7 @@ export default function DonateView({ topicList }: DonateViewProps) {
       image: null,
     },
     answers: [],
+    author_id: session!.user!.id!,
   });
   const [isCondition, setIsCondition] = useState(false);
   const [filteredTopicList, setFilteredTopicList] = useState<typeof topicList>(
@@ -60,6 +63,7 @@ export default function DonateView({ topicList }: DonateViewProps) {
         image: null,
       },
       answers: [],
+      author_id: session!.user!.id!,
     });
     setPageNumber(0);
   };
