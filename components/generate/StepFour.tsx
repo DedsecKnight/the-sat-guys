@@ -5,7 +5,7 @@ import SectionCard from "./SectionCard";
 interface StepFourProps {
   generateConfig: GenerateConfig;
   onPrevHandler: () => void;
-  onSubmitHandler: () => void;
+  onSubmitHandler: () => Promise<void>;
 }
 
 export default function StepFour({

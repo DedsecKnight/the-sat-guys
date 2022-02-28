@@ -7,6 +7,7 @@ import StepFour from "./StepFour";
 import { diffList, sectionList } from "../../lib/generate";
 import StepFive from "./StepFive";
 import { useSession } from "next-auth/react";
+import { RequestHelper } from "../../lib/request-helper";
 
 interface GenerateViewProps {
   topicList: Array<{ subtopic: string; section: string }>;
@@ -158,8 +159,17 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
     return (
       <StepFour
         generateConfig={generateConfig}
-        onSubmitHandler={() => {
+        onSubmitHandler={async () => {
           // TODO: Attempt to send generateConfig to backend
+          const { data } = await RequestHelper.post<any, any>(
+            "/api/generate",
+            { "Content-Type": "application/json" },
+            {
+              action: "generate",
+              generateConfig,
+            }
+          );
+          console.log(data);
           nextPage();
         }}
         onPrevHandler={prevPage}
