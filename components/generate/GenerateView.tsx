@@ -18,7 +18,7 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
   const [generateConfig, setGenerateConfig] = useState<GenerateConfig>({
     user_id: session!.user!.id!,
     sections: [],
-    diffDist: diffList.reduce(
+    diffDict: diffList.reduce(
       (acc, curr) => ({
         ...acc,
         [curr]: 0,
@@ -120,17 +120,17 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
   if (pageNumber - generateConfig.sections.length === 1) {
     return (
       <StepThree
-        difficulties={generateConfig.diffDist}
+        difficulties={generateConfig.diffDict}
         onNextHandler={nextPage}
         onPrevHandler={prevPage}
         updateDistItem={(key, value) => {
           const newDiffDist = {
-            ...generateConfig.diffDist,
+            ...generateConfig.diffDict,
             [key]: value,
           };
           setGenerateConfig({
             ...generateConfig,
-            diffDist: newDiffDist,
+            diffDict: newDiffDist,
           });
         }}
         getTotalQuestion={() => {

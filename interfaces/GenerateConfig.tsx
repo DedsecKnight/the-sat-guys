@@ -1,7 +1,7 @@
 export interface GenerateConfig {
   user_id: string;
   sections: SectionConfig[];
-  diffDist: Record<string, number>;
+  diffDict: Record<string, number>;
 }
 
 export interface SectionConfig {
