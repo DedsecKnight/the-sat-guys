@@ -10,7 +10,6 @@ async function handlePostRequest(req: NextApiRequest, res: NextApiResponse) {
       },
       req.body
     );
-    console.log(data);
     res.json(data);
   } catch (error) {
     console.error(error);

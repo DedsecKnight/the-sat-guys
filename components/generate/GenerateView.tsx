@@ -8,12 +8,14 @@ import { diffList, sectionList } from "../../lib/generate";
 import StepFive from "./StepFive";
 import { useSession } from "next-auth/react";
 import { RequestHelper } from "../../lib/request-helper";
+import { useNotificationContext } from "../context-api/NotificationContext";
 
 interface GenerateViewProps {
   topicList: Array<{ subtopic: string; section: string }>;
 }
 
 export default function GenerateView({ topicList }: GenerateViewProps) {
+  const { updateNotificationlist } = useNotificationContext();
   const [pageNumber, setPageNumber] = useState<number>(0);
   const { data: session } = useSession();
   const [generateConfig, setGenerateConfig] = useState<GenerateConfig>({
@@ -161,7 +163,26 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
         generateConfig={generateConfig}
         onSubmitHandler={async () => {
           // TODO: Attempt to send generateConfig to backend
-          const { data } = await RequestHelper.post<any, any>(
+          console.log(generateConfig);
+          generateConfig.sections = generateConfig.sections.map((section) => {
+            if (section.style === "normal") {
+              return {
+                ...section,
+                totalQuestion: 57,
+              };
+            }
+            if (section.style === "specific") {
+              return {
+                ...section,
+                totalQuestion: Object.values(section.topicDist).reduce(
+                  (acc, curr) => acc + curr,
+                  0
+                ),
+              };
+            }
+            return section;
+          });
+          const { status, data } = await RequestHelper.post<any, any>(
             "/api/generate",
             { "Content-Type": "application/json" },
             {
@@ -169,6 +190,15 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
               generateConfig,
             }
           );
+          if (!status) {
+            updateNotificationlist([
+              {
+                type: "error",
+                msg: data,
+              },
+            ]);
+            return;
+          }
           console.log(data);
           nextPage();
         }}
