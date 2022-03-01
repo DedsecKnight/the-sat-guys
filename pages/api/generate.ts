@@ -4,12 +4,13 @@ import { RequestHelper } from "../../lib/request-helper";
 async function handlePostRequest(req: NextApiRequest, res: NextApiResponse) {
   try {
     const data = await RequestHelper.post<unknown, unknown>(
-      `${process.env.API_ORIGIN}/donate`,
+      `${process.env.API_ORIGIN}/generate`,
       {
         "Content-Type": "application/json",
       },
       req.body
     );
+    console.log(data);
     res.json(data);
   } catch (error) {
     console.error(error);
