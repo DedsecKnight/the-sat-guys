@@ -9,12 +9,14 @@ import StepFive from "./StepFive";
 import { useSession } from "next-auth/react";
 import { RequestHelper } from "../../lib/request-helper";
 import { useNotificationContext } from "../context-api/NotificationContext";
+import { useRouter } from "next/router";
 
 interface GenerateViewProps {
   topicList: Array<{ subtopic: string; section: string }>;
 }
 
 export default function GenerateView({ topicList }: GenerateViewProps) {
+  const router = useRouter();
   const { updateNotificationlist } = useNotificationContext();
   const [pageNumber, setPageNumber] = useState<number>(0);
   const { data: session } = useSession();
@@ -36,6 +38,7 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
       checked: false,
     }))
   );
+  const [examId, setExamId] = useState<string>("");
 
   const nextPage = () => {
     setPageNumber((prev) => prev + 1);
@@ -163,7 +166,6 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
         generateConfig={generateConfig}
         onSubmitHandler={async () => {
           // TODO: Attempt to send generateConfig to backend
-          console.log(generateConfig);
           generateConfig.sections = generateConfig.sections.map((section) => {
             if (section.style === "normal") {
               return {
@@ -199,7 +201,7 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
             ]);
             return;
           }
-          console.log(data);
+          setExamId(data.exam_id);
           nextPage();
         }}
         onPrevHandler={prevPage}
@@ -211,8 +213,7 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
     return (
       <StepFive
         onNextHandler={() => {
-          // TODO: Either generate PDF of the exam or redirect to exam page
-          console.log(generateConfig);
+          router.push(`/exam?id=${examId}`);
         }}
         onPrevHandler={prevPage}
       />
