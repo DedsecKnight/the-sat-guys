@@ -1,3 +1,4 @@
+import { MathJax } from "better-react-mathjax";
 import React from "react";
 import { ExamQuestion } from "../../interfaces/ExamConfig";
 
@@ -27,7 +28,6 @@ export default function MCView({
 
       {question.answer_statement.map((answer, idx) => (
         <div
-          key={idx}
           className={`flex flex-col p-3 rounded-lg my-4 ${
             answer === currentResponse
               ? "bg-green-500 text-white"
@@ -36,9 +36,10 @@ export default function MCView({
           onClick={() => {
             onChangeResponse(answer);
           }}
+          key={idx}
         >
-          <h1 className="text-lg">
-            {String.fromCharCode(idx + 65)}. {answer}
+          <h1 className="text-lg flex items-center gap-x-3">
+            {String.fromCharCode(idx + 65)}. <MathJax>{answer}</MathJax>
           </h1>
           {question.answer_image[idx] !== "" && (
             <img src={question.answer_image[idx]} />

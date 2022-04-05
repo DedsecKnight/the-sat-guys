@@ -1,6 +1,6 @@
 import React from "react";
 import { ExamQuestion } from "../../interfaces/ExamConfig";
-import Image from "next/image";
+import { MathJax } from "better-react-mathjax";
 
 interface ViewSectionProps {
   questions: ExamQuestion[];
@@ -33,9 +33,10 @@ export default function ViewSection({
               </div>
               {question_type === "mc" ? (
                 answer_statement.map((answer, idx) => (
-                  <div key={idx}>
-                    <h1 className="text-md">
-                      {idx}. {answer}
+                  <div key={idx} className="my-6">
+                    <h1 className="text-md flex items-center">
+                      <span>{String.fromCharCode(idx + 65)}.</span>
+                      <MathJax>{answer}</MathJax>
                     </h1>
                     {answer_image[idx] && <img src={answer_image[idx]} />}
                   </div>
