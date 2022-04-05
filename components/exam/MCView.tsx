@@ -23,7 +23,9 @@ export default function MCView({
 }: MCViewProps) {
   return (
     <>
-      <h1 className="text-2xl">{question.question_statement}</h1>
+      <h1 className="text-2xl">
+        <MathJax>{question.question_statement}</MathJax>
+      </h1>
       {question.question_image !== "" && <img src={question.question_image} />}
 
       {question.answer_statement.map((answer, idx) => (

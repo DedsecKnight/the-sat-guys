@@ -11,7 +11,6 @@ export default function ViewSection({
   questions,
   backToMainView,
 }: ViewSectionProps) {
-  console.log(questions);
   return (
     <>
       <div className="my-5">
@@ -28,7 +27,9 @@ export default function ViewSection({
               className="border p-5 rounded-lg my-3"
             >
               <div>
-                <h1 className="text-lg">{question_statement}</h1>
+                <h1 className="text-lg">
+                  <MathJax>{question_statement}</MathJax>
+                </h1>
                 {question_image !== "" && <img src={question_image} />}
               </div>
               {question_type === "mc" ? (

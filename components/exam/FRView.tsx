@@ -1,6 +1,7 @@
 import React from "react";
 import { ExamQuestion } from "../../interfaces/ExamConfig";
 import { Textarea } from "@mantine/core";
+import { MathJax } from "better-react-mathjax";
 
 interface FRViewProps {
   question: ExamQuestion;
@@ -23,7 +24,9 @@ export default function FRView({
 }: FRViewProps) {
   return (
     <>
-      <h1 className="text-2xl">{question.question_statement}</h1>
+      <h1 className="text-2xl">
+        <MathJax>{question.question_statement}</MathJax>
+      </h1>
       {question.question_image !== "" && <img src={question.question_image} />}
 
       <Textarea
