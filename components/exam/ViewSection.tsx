@@ -23,7 +23,10 @@ export default function ViewSection({
             question_image,
             question_type,
           }) => (
-            <div key={question_statement} className="border p-5 rounded-lg">
+            <div
+              key={question_statement}
+              className="border p-5 rounded-lg my-3"
+            >
               <div>
                 <h1 className="text-lg">{question_statement}</h1>
                 {question_image !== "" && <img src={question_image} />}
