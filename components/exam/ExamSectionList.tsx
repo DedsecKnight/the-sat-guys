@@ -4,14 +4,16 @@ import { ExamConfig } from "../../interfaces/ExamConfig";
 interface ExamSectionListProps {
   examConfig: ExamConfig;
   setExamState: (o: { section: string; action: string }) => void;
+  onSubmitHandler: () => void;
 }
 
 export default function ExamSectionList({
   examConfig,
   setExamState,
+  onSubmitHandler,
 }: ExamSectionListProps) {
   return (
-    <div>
+    <div className="flex flex-col gap-y-3">
       {Object.keys(examConfig.sections).map((section) => (
         <div
           key={section}
@@ -34,6 +36,12 @@ export default function ExamSectionList({
           </div>
         </div>
       ))}
+      <button
+        onClick={() => onSubmitHandler()}
+        className="p-3 bg-green-400 rounded-lg text-white"
+      >
+        Submit
+      </button>
     </div>
   );
 }

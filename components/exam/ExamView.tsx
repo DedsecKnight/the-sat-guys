@@ -29,11 +29,26 @@ export default function ExamView({ exam }: ExamViewProps) {
   }, []);
 
   const submitExam = () => {
-    const userData = {
-      ...userResponse,
+    const userSubmission = {
+      action: "gradeExam",
       exam_id: exam.exam_id,
+      answer: Object.entries(exam.sections).reduce(
+        (acc: Record<string, string>, [section, examQuestions]) => {
+          return {
+            ...acc,
+            ...examQuestions.reduce(
+              (subAcc, curr, idx) => ({
+                ...subAcc,
+                [curr.question_id]: userResponse[section][idx],
+              }),
+              {} as Record<string, string>
+            ),
+          };
+        },
+        {} as Record<string, string>
+      ),
     };
-    console.log(userData);
+    console.log(userSubmission);
   };
 
   if (!examState) {
@@ -41,6 +56,9 @@ export default function ExamView({ exam }: ExamViewProps) {
       <ExamSectionList
         examConfig={exam}
         setExamState={(o) => setExamState(o)}
+        onSubmitHandler={() => {
+          submitExam();
+        }}
       />
     );
   }
@@ -59,7 +77,7 @@ export default function ExamView({ exam }: ExamViewProps) {
       sectionName={examState.section}
       questions={exam.sections[examState.section]}
       onSubmitHandler={() => {
-        submitExam();
+        setExamState(null);
       }}
       responses={userResponse[examState.section]}
       backToMainView={() => setExamState(null)}
