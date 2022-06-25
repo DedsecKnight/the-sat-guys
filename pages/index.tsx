@@ -18,7 +18,7 @@ export default function HomePage() {
         Welcome, {session.user ? session.user.name : "user"}
       </h1>
       <h1 className="my-6 text-xl">
-        Oops, there's nothing here at the moment!
+        Oops, there is nothing here at the moment!
       </h1>
       {/* <RecentExam />
       <RecentDonation /> */}
