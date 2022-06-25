@@ -1,5 +1,8 @@
+import { useRouter } from "next/router";
 import React from "react";
 import { ExamConfig } from "../../interfaces/ExamConfig";
+import { RequestHelper } from "../../lib/request-helper";
+import ExamGradeView from "./ExamGradeView";
 import ExamSectionList from "./ExamSectionList";
 import StartSection from "./StartSection";
 import ViewSection from "./ViewSection";
@@ -16,6 +19,11 @@ export default function ExamView({ exam }: ExamViewProps) {
   const [userResponse, setUserResponse] = React.useState<
     Record<string, string[]>
   >({});
+  const [gradeStatus, setGradeStatus] = React.useState<Record<
+    string,
+    boolean
+  > | null>(null);
+  const router = useRouter();
 
   React.useEffect(() => {
     setUserResponse(
@@ -28,7 +36,7 @@ export default function ExamView({ exam }: ExamViewProps) {
     );
   }, []);
 
-  const submitExam = () => {
+  const submitExam = async () => {
     const userSubmission = {
       action: "gradeExam",
       exam_id: exam.exam_id,
@@ -48,8 +56,38 @@ export default function ExamView({ exam }: ExamViewProps) {
         {} as Record<string, string>
       ),
     };
-    console.log(userSubmission);
+    try {
+      console.log(userSubmission);
+      const { data } = await RequestHelper.post<
+        typeof userSubmission,
+        Record<string, boolean>
+      >(
+        "/api/grade",
+        {
+          "Content-Type": "application/json",
+        },
+        userSubmission
+      );
+      setGradeStatus(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  if (gradeStatus) {
+    return (
+      <ExamGradeView
+        gradeStatus={gradeStatus}
+        examData={exam}
+        onGenerateNewExam={() => {
+          router.push("/generate");
+        }}
+        onGoBackToExamHandler={() => {
+          setGradeStatus(null);
+        }}
+      />
+    );
+  }
 
   if (!examState) {
     return (

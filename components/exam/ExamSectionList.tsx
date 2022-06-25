@@ -1,5 +1,6 @@
 import React from "react";
 import { ExamConfig } from "../../interfaces/ExamConfig";
+import { sectionMapping } from "../../lib/constants";
 
 interface ExamSectionListProps {
   examConfig: ExamConfig;
@@ -19,7 +20,7 @@ export default function ExamSectionList({
           key={section}
           className="flex justify-between items-center border p-3 rounded-lg"
         >
-          <h1 className="text-lg">{section}</h1>
+          <h1 className="text-lg">{sectionMapping[section]}</h1>
           <div className="flex gap-x-2">
             <button
               onClick={() => setExamState({ section, action: "view" })}
