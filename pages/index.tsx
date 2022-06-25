@@ -12,15 +12,16 @@ export default function HomePage() {
   const { data: session } = useSession();
   if (!session) return <div></div>;
 
-  console.log(session);
-
   return (
     <div className="my-10">
       <h1 className="text-3xl font-bold">
         Welcome, {session.user ? session.user.name : "user"}
       </h1>
-      <RecentExam />
-      <RecentDonation />
+      <h1 className="my-6 text-xl">
+        Oops, there is nothing here at the moment!
+      </h1>
+      {/* <RecentExam />
+      <RecentDonation /> */}
     </div>
   );
 }
