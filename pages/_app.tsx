@@ -9,26 +9,29 @@ import { LoadingContextProvider } from "../components/context-api/LoadingContext
 import { SessionProvider } from "next-auth/react";
 import AuthWrapper from "../components/utilities/AuthWrapper";
 import ProfileHeader from "../components/utilities/ProfileHeader";
+import { MathJaxContext } from "better-react-mathjax";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider session={session}>
       <AuthWrapper>
-        <LoadingContextProvider>
-          <NavContextProvider>
-            <NotificationContextProvider>
-              <div className="flex flex-row items-center justify-between">
-                <div className="flex flex-row items-center w-full gap-x-6">
-                  <Hamburger />
-                  <SearchBar />
+        <MathJaxContext>
+          <LoadingContextProvider>
+            <NavContextProvider>
+              <NotificationContextProvider>
+                <div className="flex flex-row items-center justify-between">
+                  <div className="flex flex-row items-center w-full gap-x-6">
+                    <Hamburger />
+                    <SearchBar />
+                  </div>
+                  <ProfileHeader />
                 </div>
-                <ProfileHeader />
-              </div>
-              <NotificationList />
-              <Component {...pageProps} />
-            </NotificationContextProvider>
-          </NavContextProvider>
-        </LoadingContextProvider>
+                <NotificationList />
+                <Component {...pageProps} />
+              </NotificationContextProvider>
+            </NavContextProvider>
+          </LoadingContextProvider>
+        </MathJaxContext>
       </AuthWrapper>
     </SessionProvider>
   );

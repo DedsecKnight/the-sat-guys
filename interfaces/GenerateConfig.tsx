@@ -1,16 +1,12 @@
 export interface GenerateConfig {
+  user_id: string;
   sections: SectionConfig[];
-  diffDist: DistItem[];
-}
-
-export interface DistItem {
-  value: string;
-  count: number;
+  diffDict: Record<string, number>;
 }
 
 export interface SectionConfig {
   section: string;
   style: string;
   totalQuestion: number;
-  topicDist: DistItem[];
+  topicDist: Record<string, number>;
 }

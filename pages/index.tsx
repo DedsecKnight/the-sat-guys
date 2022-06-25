@@ -12,6 +12,8 @@ export default function HomePage() {
   const { data: session } = useSession();
   if (!session) return <div></div>;
 
+  console.log(session);
+
   return (
     <div className="my-10">
       <h1 className="text-3xl font-bold">

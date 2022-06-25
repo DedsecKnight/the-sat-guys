@@ -6,19 +6,30 @@ import SectionView from "./SectionView";
 import StepFour from "./StepFour";
 import { diffList, sectionList } from "../../lib/generate";
 import StepFive from "./StepFive";
+import { useSession } from "next-auth/react";
+import { RequestHelper } from "../../lib/request-helper";
+import { useNotificationContext } from "../context-api/NotificationContext";
+import { useRouter } from "next/router";
 
 interface GenerateViewProps {
   topicList: Array<{ subtopic: string; section: string }>;
 }
 
 export default function GenerateView({ topicList }: GenerateViewProps) {
+  const router = useRouter();
+  const { updateNotificationlist } = useNotificationContext();
   const [pageNumber, setPageNumber] = useState<number>(0);
+  const { data: session } = useSession();
   const [generateConfig, setGenerateConfig] = useState<GenerateConfig>({
+    user_id: session!.user!.id!,
     sections: [],
-    diffDist: diffList.map((diff) => ({
-      value: diff,
-      count: 0,
-    })),
+    diffDict: diffList.reduce(
+      (acc, curr) => ({
+        ...acc,
+        [curr]: 0,
+      }),
+      {} as Record<string, number>
+    ),
   });
   const [sectionPageNumber, setSectionPageNumber] = useState<number[]>([]);
   const [checkedSection, setCheckedSection] = useState(
@@ -27,6 +38,7 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
       checked: false,
     }))
   );
+  const [examId, setExamId] = useState<string>("");
 
   const nextPage = () => {
     setPageNumber((prev) => prev + 1);
@@ -34,6 +46,21 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
 
   const prevPage = () => {
     setPageNumber((prev) => prev - 1);
+  };
+
+  const generateTopicDist = (
+    section: string,
+    style: string
+  ): Record<string, number> => {
+    return topicList
+      .filter((obj) => obj.section === section)
+      .reduce(
+        (acc, curr) => ({
+          ...acc,
+          [curr.subtopic]: style === "specific" ? 0 : 9999,
+        }),
+        {} as Record<string, number>
+      );
   };
 
   if (pageNumber === 0) {
@@ -46,12 +73,7 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
               section,
               style: "",
               totalQuestion: 0,
-              topicDist: topicList
-                .filter((obj) => obj.section === section)
-                .map(({ subtopic }) => ({
-                  value: subtopic,
-                  count: 0,
-                })),
+              topicDist: {},
             })),
           });
           setSectionPageNumber(value.map(() => 0));
@@ -77,6 +99,18 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
             sections: newConfig,
           });
         }}
+        initializeTopicDist={(style: string) => {
+          setGenerateConfig({
+            ...generateConfig,
+            sections: generateConfig.sections.map((section, idx) => {
+              if (idx != pageNumber - 1) return section;
+              return {
+                ...section,
+                topicDist: generateTopicDist(section.section, style),
+              };
+            }),
+          });
+        }}
         onFinishHandler={nextPage}
         onBackHandler={prevPage}
         currentPage={sectionPageNumber[pageNumber - 1]}
@@ -92,33 +126,35 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
   if (pageNumber - generateConfig.sections.length === 1) {
     return (
       <StepThree
-        difficulties={generateConfig.diffDist}
+        difficulties={generateConfig.diffDict}
         onNextHandler={nextPage}
         onPrevHandler={prevPage}
-        updateDistItem={(idx, value) => {
-          const newDiffDist = generateConfig.diffDist.map((obj) => ({
-            ...obj,
-          }));
-          newDiffDist[idx].count = value;
+        updateDistItem={(key, value) => {
+          const newDiffDist = {
+            ...generateConfig.diffDict,
+            [key]: value,
+          };
           setGenerateConfig({
             ...generateConfig,
-            diffDist: newDiffDist,
+            diffDict: newDiffDist,
           });
         }}
         getTotalQuestion={() => {
-          let totalQuestions = 0;
-          for (let section of generateConfig.sections) {
+          return generateConfig.sections.reduce((acc, section) => {
             if (section.style === "specific") {
-              for (let { count } of section.topicDist) {
-                totalQuestions += count;
-              }
-            } else if (section.style === "total") {
-              totalQuestions += section.totalQuestion;
-            } else {
-              totalQuestions += 57;
+              return (
+                acc +
+                Object.values(section.topicDist).reduce(
+                  (acc, curr) => acc + curr,
+                  0
+                )
+              );
             }
-          }
-          return totalQuestions;
+            if (section.style === "total") {
+              return acc + section.totalQuestion;
+            }
+            return acc + 57;
+          }, 0);
         }}
       />
     );
@@ -128,8 +164,44 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
     return (
       <StepFour
         generateConfig={generateConfig}
-        onSubmitHandler={() => {
+        onSubmitHandler={async () => {
           // TODO: Attempt to send generateConfig to backend
+          generateConfig.sections = generateConfig.sections.map((section) => {
+            if (section.style === "normal") {
+              return {
+                ...section,
+                totalQuestion: 57,
+              };
+            }
+            if (section.style === "specific") {
+              return {
+                ...section,
+                totalQuestion: Object.values(section.topicDist).reduce(
+                  (acc, curr) => acc + curr,
+                  0
+                ),
+              };
+            }
+            return section;
+          });
+          const { status, data } = await RequestHelper.post<any, any>(
+            "/api/generate",
+            { "Content-Type": "application/json" },
+            {
+              action: "generate",
+              generateConfig,
+            }
+          );
+          if (!status) {
+            updateNotificationlist([
+              {
+                type: "error",
+                msg: data,
+              },
+            ]);
+            return;
+          }
+          setExamId(data.exam_id);
           nextPage();
         }}
         onPrevHandler={prevPage}
@@ -138,7 +210,14 @@ export default function GenerateView({ topicList }: GenerateViewProps) {
   }
 
   if (pageNumber - generateConfig.sections.length === 3) {
-    return <StepFive generateConfig={generateConfig} />;
+    return (
+      <StepFive
+        onNextHandler={() => {
+          router.push(`/exam?id=${examId}`);
+        }}
+        onPrevHandler={prevPage}
+      />
+    );
   }
 
   return <div></div>;

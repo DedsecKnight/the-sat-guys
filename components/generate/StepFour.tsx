@@ -5,7 +5,7 @@ import SectionCard from "./SectionCard";
 interface StepFourProps {
   generateConfig: GenerateConfig;
   onPrevHandler: () => void;
-  onSubmitHandler: () => void;
+  onSubmitHandler: () => Promise<void>;
 }
 
 export default function StepFour({
@@ -20,7 +20,7 @@ export default function StepFour({
         {generateConfig.sections.map((section, idx) => (
           <SectionCard key={idx} section={section} />
         ))}
-        <DifficultyCard diffDist={generateConfig.diffDist} />
+        <DifficultyCard diffDist={generateConfig.diffDict} />
       </div>
 
       <div className="flex flex-row justify-between">
