@@ -17,8 +17,11 @@ export default function HomePage() {
       <h1 className="text-3xl font-bold">
         Welcome, {session.user ? session.user.name : "user"}
       </h1>
-      <RecentExam />
-      <RecentDonation />
+      <h1 className="my-6 text-xl">
+        Oops, there is nothing here at the moment!
+      </h1>
+      {/* <RecentExam />
+      <RecentDonation /> */}
     </div>
   );
 }

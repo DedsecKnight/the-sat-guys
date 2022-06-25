@@ -1,14 +1,13 @@
-import { DistItem } from "../../interfaces/GenerateConfig";
 import { StepCompleted } from "../../interfaces/StepCompleted";
 import { useNotificationContext } from "../context-api/NotificationContext";
 import DistributionView from "./DistributionView";
 
 interface StepTwoDistProps {
   sectionName: string;
-  topicList: DistItem[];
+  topicList: Record<string, number>;
   onNextHandler: () => void;
   onPrevHandler: () => void;
-  updateTopicList: (value: DistItem[]) => void;
+  updateTopicList: (value: Record<string, number>) => void;
 }
 
 export default function StepTwoDistTopic({
@@ -21,10 +20,10 @@ export default function StepTwoDistTopic({
   const { updateNotificationlist } = useNotificationContext();
   const stepCompleted = (): StepCompleted => {
     const errors = [];
-    let currTotalQuestions = 0;
-    for (let topic of topicList) {
-      currTotalQuestions += topic.count;
-    }
+    const currTotalQuestions = Object.values(topicList).reduce(
+      (acc, curr) => acc + curr,
+      0
+    );
     if (currTotalQuestions <= 0) {
       errors.push("At least 1 question is required");
     }
@@ -41,10 +40,11 @@ export default function StepTwoDistTopic({
       </h1>
       <DistributionView
         topicList={topicList}
-        updateTopicItem={(idx, value) => {
-          const newTopicList = topicList.map((obj) => ({ ...obj }));
-          newTopicList[idx].count = value;
-          updateTopicList(newTopicList);
+        updateTopicItem={(key, value) => {
+          updateTopicList({
+            ...topicList,
+            [key]: value,
+          });
         }}
       />
       <div className="flex flex-row justify-between">

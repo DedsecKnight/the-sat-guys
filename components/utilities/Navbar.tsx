@@ -82,7 +82,7 @@ const Navbar: React.FC<Props> = ({ currPage }) => {
         </div>
       </div>
 
-      <div>
+      {/* <div>
         <h1 className="font-medium">Admin Features</h1>
         <div className="p-3 flex flex-col gap-y-2">
           <NavItem
@@ -138,7 +138,7 @@ const Navbar: React.FC<Props> = ({ currPage }) => {
             title="Invite Admin"
           />
         </div>
-      </div>
+      </div> */}
 
       <div className="p-3 flex flex-col">
         <button onClick={() => signOut()}>

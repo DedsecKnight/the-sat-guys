@@ -44,7 +44,7 @@ export const strategyList: RadioItemData[] = [
   },
 ];
 
-export const diffList = ["easy", "normal", "hard"];
+export const diffList = ["easy", "medium", "hard"];
 
 export const actionList = {
   name: "final_action",
