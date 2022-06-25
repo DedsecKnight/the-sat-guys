@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { ExamConfig } from "../../interfaces/ExamConfig";
 import { RequestHelper } from "../../lib/request-helper";
+import { useLoadingContext } from "../context-api/LoadingContext";
 import ExamGradeView from "./ExamGradeView";
 import ExamSectionList from "./ExamSectionList";
 import StartSection from "./StartSection";
@@ -12,6 +13,7 @@ interface ExamViewProps {
 }
 
 export default function ExamView({ exam }: ExamViewProps) {
+  const { toggleLoading } = useLoadingContext();
   const [examState, setExamState] = React.useState<{
     section: string;
     action: string;
@@ -37,6 +39,7 @@ export default function ExamView({ exam }: ExamViewProps) {
   }, []);
 
   const submitExam = async () => {
+    toggleLoading();
     const userSubmission = {
       action: "gradeExam",
       exam_id: exam.exam_id,
@@ -57,7 +60,6 @@ export default function ExamView({ exam }: ExamViewProps) {
       ),
     };
     try {
-      console.log(userSubmission);
       const { data } = await RequestHelper.post<
         typeof userSubmission,
         Record<string, boolean>
@@ -71,6 +73,8 @@ export default function ExamView({ exam }: ExamViewProps) {
       setGradeStatus(data);
     } catch (error) {
       console.error(error);
+    } finally {
+      toggleLoading();
     }
   };
 
